@@ -20,6 +20,7 @@ const BACKEND_URL = 'https://swanson-rc-backend.onrender.com';
 :root{--navy:#1F3864;--navy-mid:#2E5096;--navy-light:#E8EDF5;--blue:#2E75B6;--blue-light:#D6E8F7;--green:#0F6E56;--green-light:#E1F5EE;--amber:#854F0B;--amber-light:#FAEEDA;--red:#A32D2D;--red-light:#FCEBEB;--gray-900:#1a1a1a;--gray-700:#444;--gray-500:#888;--gray-300:#ccc;--gray-100:#f4f5f7;--white:#fff;--r:8px;--rl:12px;--font:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--gray-100);color:var(--gray-900);font-size:14px;min-height:100vh}
+/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy)}
 .login-card{background:#fff;border-radius:var(--rl);padding:40px;width:380px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.25)}
 .login-logo{width:220px;display:block;margin:0 auto 24px}
@@ -31,25 +32,31 @@ body{font-family:var(--font);background:var(--gray-100);color:var(--gray-900);fo
 .login-field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1)}
 .login-error{font-size:12px;color:var(--red);text-align:center;margin-bottom:10px;display:none}
 .login-error.show{display:block}
+/* APP */
 .app{display:none;min-height:100vh}
 .app.visible{display:flex}
-.sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto}
-.main{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.sidebar{width:240px;background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto}
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:var(--white);border-bottom:1px solid var(--gray-300);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .content{padding:24px;flex:1}
 .sidebar-logo{padding:16px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center}
 .sidebar-logo img{width:140px;filter:brightness(0) invert(1)}
-.sidebar-nav{flex:1;padding:12px 0}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:rgba(255,255,255,.65);cursor:pointer;font-size:13px;font-weight:500;border-left:3px solid transparent;transition:all .15s}
+.sidebar-nav{flex:1;padding:8px 0}
+/* Menú desplegable */
+.nav-group{}
+.nav-group-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;color:rgba(255,255,255,.5);cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;user-select:none;transition:color .15s}
+.nav-group-header:hover{color:rgba(255,255,255,.8)}
+.nav-group-header .arrow{font-size:10px;transition:transform .2s}
+.nav-group-header.open .arrow{transform:rotate(180deg)}
+.nav-group-items{overflow:hidden;max-height:0;transition:max-height .25s ease}
+.nav-group-items.open{max-height:300px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 16px 8px 28px;color:rgba(255,255,255,.65);cursor:pointer;font-size:13px;font-weight:500;border-left:3px solid transparent;transition:all .15s}
 .nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
 .nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:#a8c4e0}
-.nav-item svg{flex-shrink:0}
-.nav-section{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);padding:12px 16px 4px;letter-spacing:.08em;text-transform:uppercase}
-.nav-admin{display:none}
-.nav-admin.show{display:block}
+.nav-item svg{flex-shrink:0;width:15px;height:15px}
 .sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.1)}
 .user-chip{display:flex;align-items:center;gap:8px;cursor:pointer}
-.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;flex-shrink:0}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;flex-shrink:0}
 .user-info .name{color:#fff;font-size:12px;font-weight:500}
 .user-info .role{color:rgba(255,255,255,.45);font-size:10px}
 .page-title{font-size:16px;font-weight:600}
@@ -89,6 +96,8 @@ tbody tr:hover td{background:#fafafa}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1)}
 .field input[readonly]{background:var(--gray-100);color:var(--gray-500)}
 .field textarea{min-height:70px;resize:vertical}
+.field .field-error{font-size:11px;color:var(--red);margin-top:2px;display:none}
+.field .field-error.show{display:block}
 .checklist{border:1px solid var(--gray-300);border-radius:var(--rl);overflow:hidden}
 .clh{background:var(--navy-light);padding:8px 14px;font-size:11px;font-weight:600;color:var(--navy);text-transform:uppercase;display:grid;grid-template-columns:1fr 52px 52px 1fr;gap:8px}
 .clr{display:grid;grid-template-columns:1fr 52px 52px 1fr;gap:8px;padding:8px 14px;border-top:1px solid #f0f0f0;align-items:center}
@@ -127,11 +136,12 @@ tbody tr:hover td{background:#fafafa}
 .fchip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center}
 .modal-ov.open{display:flex}
-.modal{background:var(--white);border-radius:var(--rl);padding:24px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal{background:var(--white);border-radius:var(--rl);padding:24px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto}
 .modal-title{font-size:16px;font-weight:600;margin-bottom:16px;color:var(--navy)}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:var(--rl);font-size:13px;font-weight:500;z-index:999;display:none;max-width:320px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:var(--rl);font-size:13px;font-weight:500;z-index:999;display:none;max-width:340px}
 .toast.show{display:block;animation:sup .2s ease}
 .toast.error{background:var(--red)}
+.toast.success{background:var(--green)}
 @keyframes sup{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
 .generating{display:none;align-items:center;gap:10px;background:var(--navy-light);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--navy);margin-top:12px}
 .generating.show{display:flex}
@@ -144,13 +154,15 @@ tbody tr:hover td{background:#fafafa}
 .chart-legend{display:flex;flex-direction:column;gap:6px;margin-top:12px}
 .legend-item{display:flex;align-items:center;gap:8px;font-size:12px}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-/* USER MGMT */
 .user-card{background:var(--white);border:1px solid var(--gray-300);border-radius:var(--rl);padding:16px;display:flex;align-items:center;gap:14px}
 .user-card-avatar{width:44px;height:44px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;flex-shrink:0}
 .user-card-info{flex:1}
-.user-card-name{font-size:14px;font-weight:600;color:var(--gray-900)}
-.user-card-meta{font-size:12px;color:var(--gray-500);margin-top:2px}
-@media(max-width:900px){.sidebar{width:60px}.sidebar-logo img,.nav-item span,.nav-section,.user-info{display:none}.main{margin-left:60px}.stat-grid{grid-template-columns:1fr 1fr}.photo-grid{grid-template-columns:repeat(2,1fr)}.fg{grid-template-columns:1fr}.fg3{grid-template-columns:1fr}}
+.user-card-name{font-size:14px;font-weight:600}
+.user-card-meta{font-size:12px;color:var(--gray-500);margin-top:3px}
+.perm-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:100px;margin:2px;font-weight:500}
+.perm-yes{background:var(--green-light);color:var(--green)}
+.perm-no{background:var(--red-light);color:var(--red)}
+@media(max-width:900px){.sidebar{width:56px}.sidebar-logo img,.nav-group-header span,.nav-item span,.user-info{display:none}.main{margin-left:56px}.stat-grid{grid-template-columns:1fr 1fr}.photo-grid{grid-template-columns:repeat(2,1fr)}.fg,.fg3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -173,19 +185,38 @@ tbody tr:hover td{background:#fafafa}
 <div class="sidebar">
   <div class="sidebar-logo"><img id="sidebar-logo" src="" alt="Swanson"></div>
   <nav class="sidebar-nav">
-    <div class="nav-section">Principal</div>
-    <div class="nav-item active" onclick="nav('dashboard')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></div>
-    <div class="nav-item" onclick="nav('recepciones')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span>Recepciones</span></div>
-    <div class="nav-item" onclick="nav('nueva')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Nueva recepción</span></div>
-    <div class="nav-section">Gestión</div>
-    <div class="nav-item" onclick="nav('ot')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M12 12l2 2 4-4"/></svg><span>Asignar OT</span></div>
-    <div class="nav-item" onclick="nav('informes')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg><span>Informes FSGI-249</span></div>
-    <div class="nav-admin" id="nav-admin-section">
-      <div class="nav-section">Administración</div>
-      <div class="nav-item" onclick="nav('usuarios')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Gestión usuarios</span></div>
+    <!-- BODEGA -->
+    <div class="nav-group" id="ng-bodega">
+      <div class="nav-group-header open" onclick="toggleGroup(this)">
+        <span>Bodega</span><span class="arrow">▼</span>
+      </div>
+      <div class="nav-group-items open">
+        <div class="nav-item active" id="ni-dashboard" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></div>
+        <div class="nav-item" id="ni-recepciones" onclick="nav('recepciones')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span>Recepciones</span></div>
+        <div class="nav-item" id="ni-nueva" onclick="nav('nueva')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Nueva recepción</span></div>
+      </div>
+    </div>
+    <!-- GESTIÓN COMERCIAL -->
+    <div class="nav-group" id="ng-gestion">
+      <div class="nav-group-header open" onclick="toggleGroup(this)">
+        <span>Gestión Comercial</span><span class="arrow">▼</span>
+      </div>
+      <div class="nav-group-items open">
+        <div class="nav-item" id="ni-ot" onclick="nav('ot')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M12 12l2 2 4-4"/></svg><span>Asignar OT</span></div>
+        <div class="nav-item" id="ni-informes" onclick="nav('informes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg><span>Informes FSGI-249</span></div>
+      </div>
+    </div>
+    <!-- ADMINISTRACIÓN (solo Admin) -->
+    <div class="nav-group" id="ng-admin" style="display:none">
+      <div class="nav-group-header open" onclick="toggleGroup(this)">
+        <span>Administración</span><span class="arrow">▼</span>
+      </div>
+      <div class="nav-group-items open">
+        <div class="nav-item" id="ni-usuarios" onclick="nav('usuarios')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Gestión usuarios</span></div>
+      </div>
     </div>
   </nav>
-  <div class="sidebar-footer"><div class="user-chip" onclick="logout()"><div class="user-avatar" id="nav-avatar">AD</div><div class="user-info"><div class="name" id="nav-name">Admin</div><div class="role" id="nav-role">Administrador</div></div></div></div>
+  <div class="sidebar-footer"><div class="user-chip" onclick="logout()"><div class="user-avatar" id="nav-avatar">KK</div><div class="user-info"><div class="name" id="nav-name">Kurt Cortes</div><div class="role" id="nav-role">Admin</div></div></div></div>
 </div>
 
 <div class="main">
@@ -193,7 +224,7 @@ tbody tr:hover td{background:#fafafa}
   <div class="page-title" id="topbar-title">Dashboard</div>
   <div class="topbar-actions">
     <span style="font-size:12px;color:var(--gray-500)" id="topbar-date"></span>
-    <button class="btn btn-primary btn-sm" onclick="nav('nueva')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Nueva recepción</button>
+    <div id="btn-nueva-wrap"><button class="btn btn-primary btn-sm" onclick="nav('nueva')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Nueva recepción</button></div>
   </div>
 </div>
 <div class="content">
@@ -203,8 +234,7 @@ tbody tr:hover td{background:#fafafa}
   <div class="stat-grid" id="sg"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
     <div class="card" style="grid-column:1/3"><div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:16px">Recepciones recientes</div><div id="dash-rec"></div></div>
-    <div class="card">
-      <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:16px">Estado OT</div>
+    <div class="card"><div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:16px">Estado OT</div>
       <div class="chart-wrap"><canvas id="donut-chart" width="180" height="180"></canvas><div class="chart-center"><div class="big" id="chart-total">0</div><div class="small">total</div></div></div>
       <div class="chart-legend" id="chart-legend"></div>
     </div>
@@ -213,7 +243,7 @@ tbody tr:hover td{background:#fafafa}
 
 <!-- RECEPCIONES -->
 <div class="page" id="page-recepciones">
-  <div class="sbar"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" placeholder="Buscar código, cliente, componente..." id="srch" oninput="filtrar()"></div>
+  <div class="sbar"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" placeholder="Buscar código, cliente, componente, marca..." id="srch" oninput="filtrar()"></div>
   <div class="frow" id="frow"></div>
   <div class="table-wrap"><table><thead><tr><th>Código</th><th>Fecha</th><th>Cliente</th><th>Componente</th><th>Marca</th><th>N° Serie</th><th>Guía</th><th>OT</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tbody-rec"></tbody></table></div>
 </div>
@@ -272,11 +302,11 @@ tbody tr:hover td{background:#fafafa}
   </div></div>
 
   <div id="p3" style="display:none"><div class="card">
-    <div class="alert-info"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Todas las fotos son obligatorias ★ y se pegarán ajustadas en el FSGI-249. Código: <span id="cod-foto" class="pill"></span></div>
+    <div class="alert-info"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Todas las fotos ★ son obligatorias y se pegarán en el FSGI-249. Código: <span id="cod-foto" class="pill"></span></div>
     <div class="fst">Registro fotográfico</div>
     <div class="photo-grid" id="pgrid"></div>
     <div class="pbar"><div class="pfill" id="pfill"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-500)"><span id="fcnt">0/5</span><span id="freq" style="color:var(--red)">Faltan fotos obligatorias</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-500)"><span id="fcnt">0/5</span><span id="freq" style="color:var(--red)">Faltan fotos</span></div>
     <input type="file" id="finput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
     <div class="arow"><button class="btn btn-secondary" onclick="showPaso(2)">← Volver</button><button class="btn btn-primary" id="btn-p4" onclick="goP4()" disabled>Continuar → Confirmar</button></div>
   </div></div>
@@ -287,10 +317,10 @@ tbody tr:hover td{background:#fafafa}
     <div class="divider"></div>
     <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:10px;text-transform:uppercase">El FSGI-249 incluirá</div>
     <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
-      <div style="display:flex;gap:8px;align-items:center;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Todos los datos completados automáticamente</div>
-      <div style="display:flex;gap:8px;align-items:center;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Guía de recepción en sección "Guía Y/O Factura"</div>
-      <div style="display:flex;gap:8px;align-items:center;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Fotos ajustadas y centradas en celdas de Registro Fotográfico</div>
-      <div style="display:flex;gap:8px;align-items:center;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Checklist con marcas ✓ — Formato exacto FSGI-249</div>
+      <div style="display:flex;gap:8px;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Todos los datos completados automáticamente</div>
+      <div style="display:flex;gap:8px;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Guía de recepción en sección "Guía Y/O Factura"</div>
+      <div style="display:flex;gap:8px;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>Fotos ajustadas en celdas de Registro Fotográfico</div>
+      <div style="display:flex;gap:8px;font-size:13px"><svg width="14" height="14" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:2px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>Aviso automático a Gestión Comercial por correo</div>
     </div>
     <div class="generating" id="gen-status"><div class="spinner"></div><span id="gen-msg">Generando FSGI-249...</span></div>
     <div class="arow"><button class="btn btn-secondary" onclick="showPaso(3)">← Volver</button><button class="btn btn-success" id="btn-finalizar" onclick="finalizar()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Finalizar y descargar FSGI-249</button></div>
@@ -299,7 +329,6 @@ tbody tr:hover td{background:#fafafa}
 
 <!-- OT -->
 <div class="page" id="page-ot">
-  <div style="background:var(--amber-light);border:1px solid #e0b877;border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--amber);margin-bottom:16px;display:flex;gap:8px"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Vista <strong>Gestión Comercial</strong> — Asigne el N° de OT a los componentes pendientes.</div>
   <div class="table-wrap"><table><thead><tr><th>Código</th><th>Fecha</th><th>Cliente</th><th>Componente</th><th>N° Serie</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="tbody-ot"></tbody></table></div>
 </div>
 
@@ -308,14 +337,11 @@ tbody tr:hover td{background:#fafafa}
   <div class="table-wrap"><table><thead><tr><th>Código</th><th>Fecha</th><th>Cliente</th><th>Componente</th><th>OT</th><th>Estado</th><th>Descargar</th></tr></thead><tbody id="tbody-inf"></tbody></table></div>
 </div>
 
-<!-- GESTIÓN USUARIOS (solo Admin) -->
+<!-- USUARIOS (solo Admin) -->
 <div class="page" id="page-usuarios">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-    <div>
-      <div style="font-size:16px;font-weight:600;color:var(--navy)">Gestión de Usuarios</div>
-      <div style="font-size:13px;color:var(--gray-500);margin-top:2px">Solo visible para el Administrador</div>
-    </div>
-    <button class="btn btn-primary" onclick="abrirModalUsuario()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Nuevo usuario</button>
+    <div><div style="font-size:16px;font-weight:600;color:var(--navy)">Gestión de Usuarios</div><div style="font-size:13px;color:var(--gray-500);margin-top:2px">Visible solo para Administrador</div></div>
+    <button class="btn btn-primary" onclick="abrirModalUsuario(-1)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Nuevo usuario</button>
   </div>
   <div id="lista-usuarios" style="display:flex;flex-direction:column;gap:10px"></div>
 </div>
@@ -326,7 +352,11 @@ tbody tr:hover td{background:#fafafa}
 <div class="modal-ov" id="modal-ot"><div class="modal">
   <div class="modal-title">Asignar número de OT</div>
   <div id="mot-info" style="background:var(--gray-100);border-radius:var(--r);padding:12px;margin-bottom:16px;font-size:13px"></div>
-  <div class="field" style="margin-bottom:12px"><label>N° OT nueva<span class="req">★</span></label><input type="text" id="inp-ot" placeholder="OT-2026-XXXX"></div>
+  <div class="field" style="margin-bottom:6px">
+    <label>N° OT nueva<span class="req">★</span></label>
+    <input type="text" id="inp-ot" placeholder="Ej: OT26089">
+    <div class="field-error" id="ot-error">Formato incorrecto. Use OT seguido de números (ej: OT26089)</div>
+  </div>
   <div class="field" style="margin-bottom:12px"><label>O/C - Item</label><input type="text" id="inp-oc"></div>
   <div class="field" style="margin-bottom:16px"><label>Observación comercial</label><textarea id="inp-obs-ot"></textarea></div>
   <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -335,36 +365,50 @@ tbody tr:hover td{background:#fafafa}
   </div>
 </div></div>
 
-<!-- MODAL NUEVO/EDITAR USUARIO -->
+<!-- MODAL USUARIO -->
 <div class="modal-ov" id="modal-usuario"><div class="modal">
   <div class="modal-title" id="modal-user-title">Nuevo usuario</div>
   <input type="hidden" id="edit-user-idx" value="-1">
-  <div class="fg3" style="margin-bottom:12px">
-    <div class="field ff"><label>Nombre completo<span class="req">★</span></label><input type="text" id="u-nombre" placeholder="Ej: Juan Pérez"></div>
-    <div class="field"><label>Usuario (login)<span class="req">★</span></label><input type="text" id="u-user" placeholder="Ej: jperez"></div>
-    <div class="field"><label>Contraseña<span class="req">★</span></label><input type="password" id="u-pass" placeholder="Mínimo 6 caracteres"></div>
-    <div class="field"><label>Cargo</label><input type="text" id="u-cargo" placeholder="Ej: Operador Bodega"></div>
-    <div class="field"><label>Área</label><select id="u-area"><option value="">Seleccionar área...</option><option>Bodega</option><option>Planificación</option><option>Gestión Comercial</option><option>Área Técnica</option><option>Calidad</option><option>Administración</option></select></div>
-    <div class="field"><label>Rol</label><select id="u-rol"><option value="Operador">Operador</option><option value="Supervisor">Supervisor</option></select></div>
+  <div class="fg" style="margin-bottom:12px">
+    <div class="field ff"><label>Nombre completo<span class="req">★</span></label><input type="text" id="u-nombre"></div>
+    <div class="field"><label>Usuario (login)<span class="req">★</span></label><input type="text" id="u-user"></div>
+    <div class="field"><label>Contraseña<span class="req">★</span></label><input type="password" id="u-pass" placeholder="Mín. 6 caracteres"></div>
+    <div class="field"><label>Cargo</label><input type="text" id="u-cargo"></div>
+    <div class="field"><label>Área</label><select id="u-area"><option value="">Seleccionar...</option><option>Bodega</option><option>Bodega / Jefatura</option><option>Gestión Comercial</option><option>Gestión Comercial / Jefatura</option><option>IDAC</option><option>Planificación</option><option>Área Técnica</option></select></div>
+  </div>
+  <div class="fst" style="margin-bottom:10px">Permisos</div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-crear"> Crear recepciones</label>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-ver" checked disabled> Ver recepciones (siempre)</label>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-ot"> Asignar OT</label>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="p-admin" disabled> Administración (solo Admin)</label>
   </div>
   <div style="display:flex;gap:8px;justify-content:flex-end">
     <button class="btn btn-secondary" onclick="closeModal('modal-usuario')">Cancelar</button>
-    <button class="btn btn-success" onclick="guardarUsuario()">Guardar usuario</button>
+    <button class="btn btn-success" onclick="guardarUsuario()">Guardar</button>
   </div>
 </div></div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── ESTADO ─────────────────────────────────────────────────────────────────
+// ── LOGOS ──────────────────────────────────────────────────────────────────
 document.getElementById('login-logo').src = LOGO_B64;
 document.getElementById('sidebar-logo').src = LOGO_B64;
 
-// Usuarios en memoria (Admin siempre presente)
+// ── USUARIOS ───────────────────────────────────────────────────────────────
+// perms: crear, ot, admin (ver siempre es true para todos)
 let users = [
-  {nombre:'Administrador',user:'Admin',pass:'admin1234',cargo:'Administrador',area:'Administración',rol:'Admin',initials:'AD'}
+  {nombre:'Kurt Cortes',    user:'Admin',    pass:'admin1234',  cargo:'Supervisor de Soporte Técnico', area:'IDAC',                        perms:{crear:true, ot:true, admin:true}},
+  {nombre:'Marilyn Rojas',  user:'mrojas',   pass:'marilyn1234',cargo:'Analista de Inventario',         area:'Bodega',                      perms:{crear:true, ot:false,admin:false}},
+  {nombre:'Eduardo Godoy',  user:'egodoy',   pass:'eduardo1234',cargo:'Jefe de Bodega',                 area:'Bodega / Jefatura',            perms:{crear:true, ot:true, admin:false}},
+  {nombre:'Camila Herrera', user:'cherrera', pass:'camila1234', cargo:'Encargada de Gestión Comercial', area:'Gestión Comercial / Jefatura', perms:{crear:false,ot:true, admin:false}},
+  {nombre:'Isis Gopfert',   user:'igopfert', pass:'isis1234',   cargo:'Asistente Técnico Comercial',    area:'Gestión Comercial',            perms:{crear:false,ot:true, admin:false}},
 ];
+
 let currentUser = null;
+
+function getInitials(nombre){return nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
 
 // ── AUTH ───────────────────────────────────────────────────────────────────
 function doLogin(){
@@ -375,15 +419,18 @@ function doLogin(){
   currentUser=found;
   document.getElementById('login-wrap').style.display='none';
   document.getElementById('app-wrap').classList.add('visible');
-  document.getElementById('nav-avatar').textContent=found.initials||found.user.slice(0,2).toUpperCase();
-  document.getElementById('nav-name').textContent=found.nombre||found.user;
-  document.getElementById('nav-role').textContent=found.cargo||found.rol;
+  document.getElementById('nav-avatar').textContent=getInitials(found.nombre);
+  document.getElementById('nav-name').textContent=found.nombre;
+  document.getElementById('nav-role').textContent=found.cargo;
   document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
-  // Mostrar sección admin solo si es Admin
-  document.getElementById('nav-admin-section').classList.toggle('show', found.rol==='Admin');
+  // Permisos de menú
+  document.getElementById('ng-admin').style.display=found.perms.admin?'block':'none';
+  document.getElementById('ni-nueva').style.display=found.perms.crear?'flex':'none';
+  document.getElementById('btn-nueva-wrap').style.display=found.perms.crear?'block':'none';
   renderDash();
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('login-wrap').style.display!=='none')doLogin();});
+
 function logout(){
   currentUser=null;
   document.getElementById('login-wrap').style.display='flex';
@@ -393,13 +440,42 @@ function logout(){
   document.getElementById('login-error').classList.remove('show');
 }
 
+// ── MENÚ DESPLEGABLE ───────────────────────────────────────────────────────
+function toggleGroup(header){
+  header.classList.toggle('open');
+  const items=header.nextElementSibling;
+  items.classList.toggle('open');
+}
+
+// ── NAVEGACIÓN ─────────────────────────────────────────────────────────────
+const PM={dashboard:'Dashboard',recepciones:'Recepciones',nueva:'Nueva recepción',ot:'Asignar OT',informes:'Informes FSGI-249',usuarios:'Gestión de Usuarios'};
+
+function nav(page){
+  if(page==='nueva'&&!currentUser?.perms.crear){toast('Sin permiso para crear recepciones','error');return;}
+  if(page==='ot'&&!currentUser?.perms.ot){toast('Sin permiso para asignar OT','error');return;}
+  if(page==='usuarios'&&!currentUser?.perms.admin){toast('Sin permiso de administración','error');return;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const ni=document.getElementById('ni-'+page);if(ni)ni.classList.add('active');
+  document.getElementById('topbar-title').textContent=PM[page]||page;
+  if(page==='dashboard')renderDash();
+  if(page==='recepciones')renderRec();
+  if(page==='ot')renderOT();
+  if(page==='informes')renderInf();
+  if(page==='nueva')initWizard();
+  if(page==='usuarios')renderUsuarios();
+}
+
+function badge(e){const m={'OT asignada':'b-green','Pendiente OT':'b-amber'};return `<span class="badge ${m[e]||'b-gray'}">${e}</span>`;}
+
 // ── DATOS DEMO ─────────────────────────────────────────────────────────────
 const DEMO=[
-  {codigo:"RC-BOD-2026-000001",fecha:"2026-05-15",hora:"08:22",cliente:"Codelco",guia:"GD-2026-7102",transp:"Trans Andina",pat_cam:"BCDF-12",pat_rem:"",ot_ant:"OT-2025-0312",bultos:"1",obs_gral:"",receptor:"Admin",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"994K",nparte:"3P-0291",nserie:"MF-2026-441",estvis:"Regular",cemb:"Bueno",acc:"",obs_comp:"Desgaste en carcasa",ck:{"11":"si","12":"si","13":"no","21":"no","22":"no","23":"si","31":"no"},ot:"OT-2026-0441",oc:"OC-2026-112",obs_ot:"",estado:"OT asignada"},
-  {codigo:"RC-BOD-2026-000002",fecha:"2026-05-19",hora:"10:45",cliente:"Minera Escondida",guia:"GD-2026-7841",transp:"LogisCobre",pat_cam:"GHIJ-34",pat_rem:"GHIJ-35",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Admin",tipo:"Cilindro Hidráulico",marca:"KOMATSU",modelo:"CDT3-MI",nparte:"R987-223",nserie:"CIL-22-0042",estvis:"Bueno",cemb:"Bueno",acc:"Tapones incluidos",obs_comp:"Sin daños",ck:{"11":"si","12":"no","13":"no","21":"no","22":"no","23":"si","31":"si"},ot:"OT-2026-0458",oc:"OC-2026-098",obs_ot:"",estado:"OT asignada"},
-  {codigo:"RC-BOD-2026-000003",fecha:"2026-05-22",hora:"14:10",cliente:"Antucoya",guia:"GD-2026-8201",transp:"",pat_cam:"KLMN-56",pat_rem:"",ot_ant:"OT-2025-0988",bultos:"1",obs_gral:"",receptor:"Admin",tipo:"Transmisión",marca:"LIEBHERR",modelo:"6700 OFS",nparte:"29548700",nserie:"TX-2026-009",estvis:"Malo",cemb:"Regular",acc:"",obs_comp:"Golpe en carcasa lateral",ck:{"11":"si","12":"si","13":"si","21":"no","22":"no","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",estado:"Pendiente OT"},
-  {codigo:"RC-BOD-2026-000004",fecha:"2026-05-27",hora:"09:05",cliente:"Anglo American",guia:"GD-2026-8841",transp:"Flota Norte",pat_cam:"OPQR-78",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Admin",tipo:"Conjunto Suspensión",marca:"SANDVIK",modelo:"793F",nparte:"427-8532",nserie:"SUSP-26-001",estvis:"Regular",cemb:"Malo",acc:"Faltan pernos",obs_comp:"Embalaje deteriorado",ck:{"11":"si","12":"no","13":"no","21":"si","22":"no","23":"no","31":"no"},ot:"",oc:"",obs_ot:"",estado:"Pendiente OT"},
-  {codigo:"RC-BOD-2026-000005",fecha:"2026-05-29",hora:"11:30",cliente:"BHP",guia:"GD-2026-9100",transp:"BHP Logistics",pat_cam:"STUV-90",pat_rem:"STUV-91",ot_ant:"",bultos:"3",obs_gral:"",receptor:"Admin",tipo:"Conjunto Maza",marca:"CATERPILLAR",modelo:"830E-1AC",nparte:"7085-10710",nserie:"MAZA-26-003",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Excelente estado",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"no","31":"si"},ot:"OT-2026-0501",oc:"OC-2026-145",obs_ot:"",estado:"OT asignada"},
+  {codigo:"RC-BOD-2026-000001",fecha:"2026-05-15",hora:"08:22",cliente:"Codelco",guia:"GD-2026-7102",transp:"Trans Andina",pat_cam:"BCDF-12",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"994K",nparte:"3P-0291",nserie:"MF-2026-441",estvis:"Regular",cemb:"Bueno",acc:"",obs_comp:"Desgaste en carcasa",ck:{"11":"si","12":"si","13":"no","21":"no","22":"no","23":"si","31":"no"},ot:"OT26041",oc:"",obs_ot:"",estado:"OT asignada"},
+  {codigo:"RC-BOD-2026-000002",fecha:"2026-05-19",hora:"10:45",cliente:"Minera Escondida",guia:"GD-2026-7841",transp:"LogisCobre",pat_cam:"GHIJ-34",pat_rem:"GHIJ-35",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Cilindro Hidráulico",marca:"KOMATSU",modelo:"CDT3-MI",nparte:"R987-223",nserie:"CIL-22-0042",estvis:"Bueno",cemb:"Bueno",acc:"Tapones incluidos",obs_comp:"Sin daños",ck:{"11":"si","12":"no","13":"no","21":"no","22":"no","23":"si","31":"si"},ot:"OT26058",oc:"",obs_ot:"",estado:"OT asignada"},
+  {codigo:"RC-BOD-2026-000003",fecha:"2026-05-22",hora:"14:10",cliente:"Antucoya",guia:"GD-2026-8201",transp:"",pat_cam:"KLMN-56",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Transmisión",marca:"LIEBHERR",modelo:"6700 OFS",nparte:"29548700",nserie:"TX-2026-009",estvis:"Malo",cemb:"Regular",acc:"",obs_comp:"Golpe en carcasa lateral",ck:{"11":"si","12":"si","13":"si","21":"no","22":"no","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",estado:"Pendiente OT"},
+  {codigo:"RC-BOD-2026-000004",fecha:"2026-05-27",hora:"09:05",cliente:"Anglo American",guia:"GD-2026-8841",transp:"Flota Norte",pat_cam:"OPQR-78",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Conjunto Suspensión",marca:"SANDVIK",modelo:"793F",nparte:"427-8532",nserie:"SUSP-26-001",estvis:"Regular",cemb:"Malo",acc:"Faltan pernos",obs_comp:"Embalaje deteriorado",ck:{"11":"si","12":"no","13":"no","21":"si","22":"no","23":"no","31":"no"},ot:"",oc:"",obs_ot:"",estado:"Pendiente OT"},
+  {codigo:"RC-BOD-2026-000005",fecha:"2026-05-29",hora:"11:30",cliente:"BHP",guia:"GD-2026-9100",transp:"BHP Logistics",pat_cam:"STUV-90",pat_rem:"STUV-91",ot_ant:"",bultos:"3",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Conjunto Maza",marca:"CATERPILLAR",modelo:"830E-1AC",nparte:"7085-10710",nserie:"MAZA-26-003",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Excelente estado",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"no","31":"si"},ot:"OT26089",oc:"",obs_ot:"",estado:"OT asignada"},
 ];
 let db=[...DEMO.map(r=>({...r}))];
 let correlativo=db.length;
@@ -413,23 +489,15 @@ const SLOTS=[
   {key:'guia_recepcion', label:'4. Guía de recepción', req:true},
   {key:'accesorios',     label:'5. Accesorios',        req:true},
 ];
-const PM={dashboard:'Dashboard',recepciones:'Recepciones',nueva:'Nueva recepción',ot:'Asignar OT',informes:'Informes FSGI-249',usuarios:'Gestión de Usuarios'};
 
-function nav(page){
-  if(page==='usuarios'&&currentUser?.rol!=='Admin'){toast('Solo el Administrador puede acceder','error');return;}
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');if(n.getAttribute('onclick')?.includes("'"+page+"'"))n.classList.add('active');});
-  document.getElementById('topbar-title').textContent=PM[page]||page;
-  if(page==='dashboard')renderDash();
-  if(page==='recepciones')renderRec();
-  if(page==='ot')renderOT();
-  if(page==='informes')renderInf();
-  if(page==='nueva')initWizard();
-  if(page==='usuarios')renderUsuarios();
+// ── VALIDACIÓN OT ──────────────────────────────────────────────────────────
+function validarOT(ot){
+  // Debe comenzar con OT, seguido solo de números, sin espacios ni guiones
+  return /^OT\d+$/.test(ot);
 }
-
-function badge(e){const m={'OT asignada':'b-green','Pendiente OT':'b-amber'};return `<span class="badge ${m[e]||'b-gray'}">${e}</span>`;}
+function otDuplicada(ot, excludeCod=null){
+  return db.some(r=>r.ot===ot && r.codigo!==excludeCod);
+}
 
 // ── DASHBOARD ──────────────────────────────────────────────────────────────
 function renderDash(){
@@ -446,18 +514,17 @@ function renderDash(){
   drawDonut(conOT,sinOT,total);
   const pO=total>0?Math.round(conOT/total*100):0,pP=total>0?Math.round(sinOT/total*100):0;
   document.getElementById('chart-legend').innerHTML=`
-    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span>${conOT} Con OT asignada (${pO}%)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span>${conOT} Con OT (${pO}%)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div><span>${sinOT} Pendientes OT (${pP}%)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--gray-300)"></div><span>${total} Total registradas</span></div>`;
 }
 function drawDonut(conOT,sinOT,total){
-  const canvas=document.getElementById('donut-chart');
-  const ctx=canvas.getContext('2d');
+  const c=document.getElementById('donut-chart'),ctx=c.getContext('2d');
   ctx.clearRect(0,0,180,180);
-  if(total===0){ctx.beginPath();ctx.arc(90,90,70,0,Math.PI*2);ctx.strokeStyle='#e5e5e5';ctx.lineWidth=20;ctx.stroke();return;}
+  if(!total){ctx.beginPath();ctx.arc(90,90,70,0,Math.PI*2);ctx.strokeStyle='#e5e5e5';ctx.lineWidth=20;ctx.stroke();return;}
   const data=[{val:conOT,color:'#0F6E56'},{val:sinOT,color:'#854F0B'}].filter(d=>d.val>0);
-  let start=-Math.PI/2;
-  data.forEach(d=>{const s=(d.val/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(90,90);ctx.arc(90,90,70,start,start+s);ctx.closePath();ctx.fillStyle=d.color;ctx.fill();start+=s;});
+  let s=-Math.PI/2;
+  data.forEach(d=>{const sl=(d.val/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(90,90);ctx.arc(90,90,70,s,s+sl);ctx.closePath();ctx.fillStyle=d.color;ctx.fill();s+=sl;});
   ctx.beginPath();ctx.arc(90,90,50,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
 }
 
@@ -471,7 +538,8 @@ function setF(e){filtroActivo=e;renderRec();}
 function filtrar(){renderFiltered();}
 function renderFiltered(){
   const q=(document.getElementById('srch')?.value||'').toLowerCase();
-  const rows=db.filter(r=>{const mq=!q||[r.codigo,r.cliente,r.tipo,r.guia,r.nserie,r.marca].some(f=>f?.toLowerCase().includes(q));return mq&&(filtroActivo==='Todos'||r.estado===filtroActivo);});
+  const rows=db.filter(r=>{const mq=!q||[r.codigo,r.cliente,r.tipo,r.guia,r.nserie,r.marca,r.receptor].some(f=>f?.toLowerCase().includes(q));return mq&&(filtroActivo==='Todos'||r.estado===filtroActivo);});
+  const puedOT=currentUser?.perms.ot;
   document.getElementById('tbody-rec').innerHTML=[...rows].reverse().map(r=>`
     <tr><td><span class="mono">${r.codigo}</span></td><td>${r.fecha}</td><td>${r.cliente}</td><td>${r.tipo}</td><td>${r.marca}</td>
     <td><span style="font-family:var(--mono);font-size:11px;color:var(--gray-500)">${r.nserie||'—'}</span></td>
@@ -479,7 +547,7 @@ function renderFiltered(){
     <td>${badge(r.estado)}</td>
     <td><div style="display:flex;gap:4px">
       <button class="btn btn-sm" style="background:var(--navy-light);color:var(--navy)" onclick="descargar('${r.codigo}')">FSGI-249 ↓</button>
-      ${r.estado==='Pendiente OT'?`<button class="btn btn-sm" style="background:var(--amber-light);color:var(--amber);border:1px solid #e0b877" onclick="abrirOT('${r.codigo}')">Asignar OT</button>`:''}
+      ${r.estado==='Pendiente OT'&&puedOT?`<button class="btn btn-sm" style="background:var(--amber-light);color:var(--amber);border:1px solid #e0b877" onclick="abrirOT('${r.codigo}')">Asignar OT</button>`:''}
     </div></td></tr>`).join('');
 }
 function renderOT(){
@@ -487,7 +555,10 @@ function renderOT(){
   document.getElementById('tbody-ot').innerHTML=pend.length?pend.map(r=>`
     <tr><td><span class="mono">${r.codigo}</span></td><td>${r.fecha} ${r.hora}</td><td>${r.cliente}</td><td>${r.tipo}</td>
     <td><span style="font-family:var(--mono);font-size:11px">${r.nserie||'—'}</span></td><td>${badge(r.estado)}</td>
-    <td><div style="display:flex;gap:4px"><button class="btn btn-sm btn-secondary" onclick="descargar('${r.codigo}')">Ver FSGI-249</button><button class="btn btn-sm btn-success" onclick="abrirOT('${r.codigo}')">Asignar OT</button></div></td></tr>`).join('')
+    <td><div style="display:flex;gap:4px">
+      <button class="btn btn-sm btn-secondary" onclick="descargar('${r.codigo}')">Ver FSGI-249</button>
+      <button class="btn btn-sm btn-success" onclick="abrirOT('${r.codigo}')">Asignar OT</button>
+    </div></td></tr>`).join('')
     :'<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--green);font-weight:500">✓ Todos tienen OT asignada</td></tr>';
 }
 function renderInf(){
@@ -501,87 +572,74 @@ function renderInf(){
 // ── GESTIÓN USUARIOS ───────────────────────────────────────────────────────
 function renderUsuarios(){
   const lista=document.getElementById('lista-usuarios');
-  const editables=users.filter(u=>u.rol!=='Admin'||u.user==='Admin');
-  if(users.length<=1){
-    lista.innerHTML=`<div style="text-align:center;padding:40px;color:var(--gray-500)">No hay usuarios creados aún.<br>Haz clic en "Nuevo usuario" para agregar.</div>`;
-    return;
-  }
-  lista.innerHTML=users.map((u,i)=>`
-    <div class="user-card">
-      <div class="user-card-avatar" style="background:${u.rol==='Admin'?'var(--navy)':'var(--blue)'}">
-        ${u.initials||u.user.slice(0,2).toUpperCase()}
+  lista.innerHTML=users.map((u,i)=>{
+    const p=u.perms;
+    return `<div class="user-card">
+      <div class="user-card-avatar" style="background:${p.admin?'var(--navy)':'var(--blue)'}">
+        ${getInitials(u.nombre)}
       </div>
       <div class="user-card-info">
-        <div class="user-card-name">${u.nombre||u.user}</div>
-        <div class="user-card-meta">
-          Usuario: <strong>${u.user}</strong> &nbsp;·&nbsp;
-          ${u.cargo||'—'} &nbsp;·&nbsp;
-          Área: ${u.area||'—'} &nbsp;·&nbsp;
-          <span class="badge ${u.rol==='Admin'?'b-navy':'b-green'}">${u.rol}</span>
+        <div class="user-card-name">${u.nombre} <span style="font-weight:400;color:var(--gray-500);font-size:12px">@${u.user}</span></div>
+        <div class="user-card-meta">${u.cargo} · ${u.area}</div>
+        <div style="margin-top:4px">
+          <span class="perm-tag ${p.crear?'perm-yes':'perm-no'}">${p.crear?'✓':'✗'} Crear</span>
+          <span class="perm-tag perm-yes">✓ Ver</span>
+          <span class="perm-tag ${p.ot?'perm-yes':'perm-no'}">${p.ot?'✓':'✗'} Asignar OT</span>
+          <span class="perm-tag ${p.admin?'perm-yes':'perm-no'}">${p.admin?'✓':'✗'} Admin</span>
         </div>
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="btn btn-sm btn-secondary" onclick="editarUsuario(${i})">Editar</button>
-        ${u.rol!=='Admin'?`<button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${i})">Eliminar</button>`:''}
+        <button class="btn btn-sm btn-secondary" onclick="abrirModalUsuario(${i})">Editar</button>
+        ${!p.admin?`<button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${i})">Eliminar</button>`:''}
       </div>
-    </div>`).join('');
+    </div>`;}).join('');
 }
 
-function abrirModalUsuario(idx=-1){
+function abrirModalUsuario(idx){
   document.getElementById('edit-user-idx').value=idx;
   document.getElementById('modal-user-title').textContent=idx>=0?'Editar usuario':'Nuevo usuario';
   if(idx>=0){
     const u=users[idx];
-    document.getElementById('u-nombre').value=u.nombre||'';
+    document.getElementById('u-nombre').value=u.nombre;
     document.getElementById('u-user').value=u.user;
     document.getElementById('u-pass').value='';
     document.getElementById('u-cargo').value=u.cargo||'';
     document.getElementById('u-area').value=u.area||'';
-    document.getElementById('u-rol').value=u.rol==='Admin'?'Supervisor':u.rol;
+    document.getElementById('p-crear').checked=u.perms.crear;
+    document.getElementById('p-ot').checked=u.perms.ot;
   } else {
     ['u-nombre','u-user','u-pass','u-cargo'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('u-area').selectedIndex=0;
-    document.getElementById('u-rol').selectedIndex=0;
+    document.getElementById('p-crear').checked=false;
+    document.getElementById('p-ot').checked=false;
   }
   document.getElementById('modal-usuario').classList.add('open');
 }
-
-function editarUsuario(i){abrirModalUsuario(i);}
-
 function eliminarUsuario(i){
-  if(users[i].rol==='Admin'){toast('No se puede eliminar al Administrador','error');return;}
-  users.splice(i,1);
-  renderUsuarios();
-  toast('Usuario eliminado');
+  if(users[i].perms.admin){toast('No se puede eliminar al Administrador','error');return;}
+  users.splice(i,1);renderUsuarios();toast('Usuario eliminado');
 }
-
 function guardarUsuario(){
   const nombre=document.getElementById('u-nombre').value.trim();
   const user=document.getElementById('u-user').value.trim();
   const pass=document.getElementById('u-pass').value;
   const cargo=document.getElementById('u-cargo').value.trim();
   const area=document.getElementById('u-area').value;
-  const rol=document.getElementById('u-rol').value;
+  const crear=document.getElementById('p-crear').checked;
+  const ot=document.getElementById('p-ot').checked;
   const idx=parseInt(document.getElementById('edit-user-idx').value);
-
   if(!nombre||!user){toast('Nombre y usuario son obligatorios','error');return;}
   if(idx<0&&!pass){toast('Ingrese una contraseña','error');return;}
-  if(pass&&pass.length<6){toast('La contraseña debe tener al menos 6 caracteres','error');return;}
-
-  // Check duplicate username
-  const dup=users.findIndex((u,i)=>u.user===user&&i!==idx);
-  if(dup>=0){toast('Ese nombre de usuario ya existe','error');return;}
-
-  const initials=(nombre.split(' ').map(w=>w[0]).join('').slice(0,2)).toUpperCase();
+  if(pass&&pass.length<6){toast('Contraseña mínimo 6 caracteres','error');return;}
+  if(users.some((u,i)=>u.user===user&&i!==idx)){toast('Ese usuario ya existe','error');return;}
   if(idx>=0){
-    users[idx]={...users[idx],nombre,user,cargo,area,rol,initials};
-    if(pass) users[idx].pass=pass;
+    users[idx]={...users[idx],nombre,user,cargo,area,perms:{...users[idx].perms,crear,ot}};
+    if(pass)users[idx].pass=pass;
   } else {
-    users.push({nombre,user,pass,cargo,area,rol,initials});
+    users.push({nombre,user,pass,cargo,area,perms:{crear,ot,admin:false}});
   }
-  closeModal('modal-usuario');
-  renderUsuarios();
-  toast(idx>=0?'Usuario actualizado':'Usuario creado correctamente');
+  closeModal('modal-usuario');renderUsuarios();
+  toast(idx>=0?'Usuario actualizado':'Usuario creado');
 }
 
 // ── WIZARD ─────────────────────────────────────────────────────────────────
@@ -590,7 +648,7 @@ function initWizard(){
   const now=new Date();
   document.getElementById('f-fecha').value=now.toISOString().split('T')[0];
   document.getElementById('f-hora').value=now.toTimeString().slice(0,5);
-  document.getElementById('f-receptor').value=currentUser?.nombre||currentUser?.user||'Admin';
+  document.getElementById('f-receptor').value=currentUser?.nombre||'';
   ['f-cliente','f-tipo','f-marca','f-estvis','f-cemb'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
   ['f-guia','f-transp','f-pat-cam','f-pat-rem','f-ot-ant','f-obs-gral','f-modelo','f-nparte','f-nserie','f-acc','f-obs-comp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('f-bultos').value=1;
@@ -598,7 +656,8 @@ function initWizard(){
     ['s','n'].forEach(v=>{const el=document.getElementById(`c${k}${v}`);if(el)el.classList.remove('si-on','no-on');});
     const o=document.getElementById(`o${k}`);if(o)o.value='';
   });
-  const cod=`RC-BOD-${now.getFullYear()}-${String(correlativo+1).padStart(6,'0')}`;
+  const year=now.getFullYear();
+  const cod=`RC-BOD-${year}-${String(correlativo+1).padStart(6,'0')}`;
   document.getElementById('cod-gen').textContent=cod;
   document.getElementById('cod-foto').textContent=cod;
   document.getElementById('gen-status').classList.remove('show');
@@ -624,7 +683,7 @@ function chk(key,val){
 }
 function renderPhotoGrid(){
   document.getElementById('pgrid').innerHTML=SLOTS.map(s=>`
-    <div class="pslot ${photoState[s.key]?'taken':''} req" onclick="clickSlot('${s.key}')">
+    <div class="pslot req ${photoState[s.key]?'taken':''}" onclick="clickSlot('${s.key}')">
       ${photoState[s.key]?`<img class="thumb" src="${photoState[s.key]}" alt="${s.label}">`:
         `<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>`}
       <span class="sl">${s.label}</span>
@@ -644,7 +703,7 @@ function updateFotos(){
   document.getElementById('pfill').style.width=Math.round(taken/SLOTS.length*100)+'%';
   document.getElementById('fcnt').textContent=`${taken}/${SLOTS.length} fotografías`;
   const ok=taken>=SLOTS.length;
-  document.getElementById('freq').textContent=ok?'✓ Todas las fotos completas':`Faltan ${SLOTS.length-taken} foto(s)`;
+  document.getElementById('freq').textContent=ok?'✓ Todas las fotos listas':`Faltan ${SLOTS.length-taken} foto(s)`;
   document.getElementById('freq').style.color=ok?'var(--green)':'var(--red)';
   document.getElementById('btn-p4').disabled=!ok;
 }
@@ -657,6 +716,7 @@ function renderResumen(){
     ['Marca',document.getElementById('f-marca').value],
     ['N° Serie',document.getElementById('f-nserie').value||'—'],
     ['Estado',document.getElementById('f-estvis').value],
+    ['Receptor',currentUser?.nombre||'—'],
     ['Fotografías',`${SLOTS.filter(s=>photoState[s.key]).length}/5 ✓`],
   ];
   document.getElementById('resumen').innerHTML=items.map(([k,v])=>`<div style="padding:6px 0;border-bottom:1px solid #f0f0f0"><div style="font-size:11px;color:var(--gray-500);margin-bottom:2px">${k}</div><div style="font-size:13px;font-weight:500">${v}</div></div>`).join('');
@@ -675,8 +735,7 @@ async function finalizar(){
     transp:document.getElementById('f-transp').value,pat_cam:document.getElementById('f-pat-cam').value,
     pat_rem:document.getElementById('f-pat-rem').value,ot_ant:document.getElementById('f-ot-ant').value,
     bultos:document.getElementById('f-bultos').value,obs_gral:document.getElementById('f-obs-gral').value,
-    receptor:currentUser?.nombre||currentUser?.user||'Admin',
-    cargo:currentUser?.cargo||'Bodega',
+    receptor:currentUser?.nombre||'',cargo:currentUser?.cargo||'Bodega',
     tipo:document.getElementById('f-tipo').value,marca:document.getElementById('f-marca').value,
     modelo:document.getElementById('f-modelo').value,nparte:document.getElementById('f-nparte').value,
     nserie:document.getElementById('f-nserie').value,estvis:document.getElementById('f-estvis').value,
@@ -684,12 +743,11 @@ async function finalizar(){
     obs_comp:document.getElementById('f-obs-comp').value,ck:{...ckState},
     ot:'',oc:'',obs_ot:'',estado:'Pendiente OT'
   };
-  msg.textContent='Enviando datos y fotografías al servidor...';
+  msg.textContent='Enviando al servidor y generando FSGI-249...';
   const fd=new FormData();
   fd.append('rec',JSON.stringify(rec));
   SLOTS.forEach(s=>{if(photoFiles[s.key])fd.append(s.key,photoFiles[s.key]);});
   try{
-    msg.textContent='Generando FSGI-249 con fotos ajustadas...';
     const resp=await fetch(`${BACKEND_URL}/generar-fsgi249`,{method:'POST',body:fd});
     if(!resp.ok)throw new Error((await resp.json().catch(()=>({error:'Error servidor'}))).error);
     const blob=await resp.blob();
@@ -698,8 +756,8 @@ async function finalizar(){
     a.download=`${rec.codigo}_${rec.cliente.replace(/\s/g,'_')}_FSGI249.xlsx`;
     a.click();URL.revokeObjectURL(url);
     db.push(rec);gen.classList.remove('show');btn.disabled=false;
-    toast(`✓ ${rec.codigo} generado`);
-    setTimeout(()=>nav('recepciones'),1500);
+    toast(`✓ ${rec.codigo} creado. Aviso enviado a Gestión Comercial.`,'success');
+    setTimeout(()=>nav('recepciones'),2000);
   }catch(err){
     gen.classList.remove('show');btn.disabled=false;
     toast(`Error: ${err.message}`,'error');
@@ -723,23 +781,29 @@ function descargar(cod){
 function abrirOT(cod){
   const r=db.find(x=>x.codigo===cod);if(!r)return;
   modalCod=cod;
+  document.getElementById('inp-ot').value='';
+  document.getElementById('inp-oc').value='';
+  document.getElementById('inp-obs-ot').value='';
+  document.getElementById('ot-error').classList.remove('show');
   document.getElementById('mot-info').innerHTML=`<div style="display:flex;gap:16px;flex-wrap:wrap">
     <div><div style="font-size:10px;color:var(--gray-500)">Código</div><div class="mono">${r.codigo}</div></div>
     <div><div style="font-size:10px;color:var(--gray-500)">Cliente</div><div style="font-size:13px;font-weight:500">${r.cliente}</div></div>
     <div><div style="font-size:10px;color:var(--gray-500)">Componente</div><div style="font-size:13px">${r.tipo} · ${r.marca}</div></div></div>`;
-  document.getElementById('inp-ot').value='';
-  document.getElementById('inp-oc').value='';
-  document.getElementById('inp-obs-ot').value='';
   document.getElementById('modal-ot').classList.add('open');
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function saveOT(){
   const ot=document.getElementById('inp-ot').value.trim();
-  if(!ot){toast('Ingrese el número de OT');return;}
+  const errEl=document.getElementById('ot-error');
+  // Validar formato
+  if(!validarOT(ot)){errEl.textContent='Formato incorrecto. Use OT seguido de números sin espacios ni guiones (ej: OT26089)';errEl.classList.add('show');return;}
+  // Validar duplicado
+  if(otDuplicada(ot,modalCod)){errEl.textContent='Ese número de OT ya está asignado a otro componente';errEl.classList.add('show');return;}
+  errEl.classList.remove('show');
   const r=db.find(x=>x.codigo===modalCod);
   if(r){r.ot=ot;r.oc=document.getElementById('inp-oc').value;r.obs_ot=document.getElementById('inp-obs-ot').value;r.estado='OT asignada';}
   closeModal('modal-ot');
-  toast(`✓ OT ${ot} asignada`);
+  toast(`✓ OT ${ot} asignada a ${modalCod}`,'success');
   const pid=document.querySelector('.page.active')?.id;
   if(pid==='page-ot')renderOT();
   if(pid==='page-recepciones')renderRec();
@@ -749,7 +813,7 @@ document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',fun
 
 function toast(msg,type){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast show'+(type==='error'?' error':'');
+  t.textContent=msg;t.className='toast show'+(type==='error'?' error':type==='success'?' success':'');
   setTimeout(()=>t.classList.remove('show'),4000);
 }
 </script>
