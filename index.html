@@ -60,8 +60,8 @@ body{font-family:var(--font);background:var(--gray-100);color:var(--gray-900);fo
 .sidebar.collapsed{width:var(--sidebar-collapsed)}
 .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left .25s ease}
 .main.collapsed{margin-left:var(--sidebar-collapsed)}
-.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:16px 14px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
-.sidebar-logo-img{height:28px;filter:brightness(0) invert(1);min-width:100px}
+.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 12px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;min-height:60px}
+.sidebar-logo-img{height:36px;max-width:160px;object-fit:contain;filter:none;background:var(--white);border-radius:6px;padding:4px 8px}
 .sidebar-toggle{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.08);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-400);transition:all .15s;flex-shrink:0}
 .sidebar-toggle:hover{background:rgba(255,255,255,.15);color:var(--white)}
 .sidebar-toggle svg{transition:transform .25s}
