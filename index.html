@@ -263,6 +263,35 @@ tbody tr:hover td{background:#F9FAFB}
 .int-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .int-title{font-size:13px;font-weight:700;color:var(--gray-900)}
 
+/* ── DASHBOARD MEJORADO ── */
+.stat-card{position:relative;border-left:4px solid transparent}
+.stat-card.sc-blue{border-left-color:var(--blue)}
+.stat-card.sc-amber{border-left-color:#F59E0B}
+.stat-card.sc-green{border-left-color:var(--green)}
+.stat-card.sc-purple{border-left-color:var(--purple)}
+.stat-icon{position:absolute;top:14px;right:14px;opacity:.12}
+.stat-trend{font-size:11px;font-weight:600;margin-top:6px}
+.trend-up{color:var(--green)}.trend-neutral{color:var(--gray-400)}.trend-warn{color:#D97706}
+/* bar chart */
+.bar-chart-wrap{width:100%;overflow:hidden}
+#bar-chart{display:block;width:100%}
+/* top clients */
+.client-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--gray-100)}
+.client-row:last-child{border-bottom:none}
+.client-name{width:120px;font-size:12px;font-weight:500;color:var(--gray-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.client-bar-bg{flex:1;height:6px;background:var(--gray-100);border-radius:99px;overflow:hidden}
+.client-bar-fill{height:100%;border-radius:99px;background:var(--blue);transition:width .4s ease}
+.client-count{font-size:12px;font-weight:700;color:var(--navy);width:20px;text-align:right;flex-shrink:0}
+/* visual state summary */
+.vstate-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100)}
+.vstate-row:last-child{border-bottom:none}
+.vstate-label{width:62px;font-size:12px;font-weight:500;flex-shrink:0}
+.vstate-bar-bg{flex:1;height:8px;background:var(--gray-100);border-radius:99px;overflow:hidden}
+.vstate-bar-fill{height:100%;border-radius:99px}
+.vstate-pct{font-size:11px;font-weight:600;color:var(--gray-600);width:32px;text-align:right;flex-shrink:0}
+/* dash row */
+.dash-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+
 @media(max-width:900px){
   .sidebar{width:var(--sidebar-collapsed)}.main{margin-left:var(--sidebar-collapsed)}
   .sidebar .sidebar-logo-img,.sidebar .user-info,.sidebar .nav-item span,.sidebar .nav-standalone span,.sidebar .nav-group-header span,.sidebar .nav-group-header .arrow{display:none}
@@ -369,6 +398,22 @@ tbody tr:hover td{background:#F9FAFB}
       <div class="chart-wrap"><canvas id="donut-chart" width="180" height="180"></canvas><div class="chart-center"><div class="big" id="chart-total">0</div><div class="small">total</div></div></div>
       <div class="chart-legend" id="chart-legend"></div>
     </div>
+  </div>
+  <!-- Tendencia mensual + Top clientes -->
+  <div class="dash-row-2">
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--gray-800);margin-bottom:14px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Tendencia mensual</div>
+      <div class="bar-chart-wrap"><canvas id="bar-chart" height="130"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:700;color:var(--gray-800);margin-bottom:14px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Top clientes</div>
+      <div id="dash-top-clientes"></div>
+    </div>
+  </div>
+  <!-- Condición visual (Admin/Supervisor) -->
+  <div class="card" id="card-estvis" style="display:none;margin-bottom:16px">
+    <div style="font-size:14px;font-weight:700;color:var(--gray-800);margin-bottom:14px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Condición visual de componentes</div>
+    <div id="dash-estvis"></div>
   </div>
   <!-- OT Intervenidas -->
   <div class="card" id="card-intervenidas" style="display:none">
@@ -634,11 +679,29 @@ function logAction(accion, detalle, antes='', despues=''){
 
 // ── DATOS DEMO ─────────────────────────────────────────────────────────────
 const DEMO=[
-  {codigo:"RC-BOD-2026-000001",fecha:"2026-05-15",hora:"08:22",cliente:"Codelco",guia:"GD-2026-7102",transp:"Trans Andina",pat_cam:"BCDF-12",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"994K",nparte:"3P-0291",nserie:"MF-2026-441",color:"Amarillo CAT",estvis:"Regular",cemb:"Bueno",acc:"",obs_comp:"Desgaste en carcasa",ck:{"11":"si","12":"si","13":"no","21":"no","22":"no","23":"si","31":"no"},ot:"OT26041",oc:"",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
-  {codigo:"RC-BOD-2026-000002",fecha:"2026-05-19",hora:"10:45",cliente:"Minera Escondida",guia:"GD-2026-7841",transp:"LogisCobre",pat_cam:"GHIJ-34",pat_rem:"GHIJ-35",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Cilindro Hidráulico",marca:"KOMATSU",modelo:"CDT3-MI",nparte:"R987-223",nserie:"CIL-22-0042",color:"Amarillo Komatsu",estvis:"Bueno",cemb:"Bueno",acc:"Tapones incluidos",obs_comp:"Sin daños",ck:{"11":"si","12":"no","13":"no","21":"no","22":"no","23":"si","31":"si"},ot:"OT26058",oc:"",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
-  {codigo:"RC-BOD-2026-000003",fecha:"2026-05-22",hora:"14:10",cliente:"Antucoya",guia:"GD-2026-8201",transp:"",pat_cam:"KLMN-56",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Transmisión",marca:"LIEBHERR",modelo:"6700 OFS",nparte:"29548700",nserie:"TX-2026-009",color:"Gris",estvis:"Malo",cemb:"Regular",acc:"",obs_comp:"Golpe en carcasa lateral",ck:{"11":"si","12":"si","13":"si","21":"no","22":"no","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
-  {codigo:"RC-BOD-2026-000004",fecha:"2026-05-27",hora:"09:05",cliente:"Anglo American",guia:"GD-2026-8841",transp:"Flota Norte",pat_cam:"OPQR-78",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Conjunto Suspensión",marca:"SANDVIK",modelo:"793F",nparte:"427-8532",nserie:"SUSP-26-001",color:"Negro",estvis:"Regular",cemb:"Malo",acc:"Faltan pernos",obs_comp:"Embalaje deteriorado",ck:{"11":"si","12":"no","13":"no","21":"si","22":"no","23":"no","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
-  {codigo:"RC-BOD-2026-000005",fecha:"2026-05-29",hora:"11:30",cliente:"BHP",guia:"GD-2026-9100",transp:"BHP Logistics",pat_cam:"STUV-90",pat_rem:"STUV-91",ot_ant:"",bultos:"3",obs_gral:"",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Conjunto Maza",marca:"CATERPILLAR",modelo:"830E-1AC",nparte:"7085-10710",nserie:"MAZA-26-003",color:"Amarillo CAT",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Excelente estado",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"no","31":"si"},ot:"OT26089",oc:"",obs_ot:"Intervención turno noche",intervenida:true,estado:"OT asignada",historial:[]},
+  // ── Marzo 2026 (4 registros) ──────────────────────────────────────────────
+  {codigo:"RC-BOD-2026-000001",fecha:"2026-03-10",hora:"08:22",cliente:"Codelco",guia:"GD-2026-7102",transp:"Trans Andina",pat_cam:"BCDF-12",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"994K",nparte:"3P-0291",nserie:"MF-2026-441",color:"Amarillo CAT",estvis:"Regular",cemb:"Bueno",acc:"",obs_comp:"Desgaste en carcasa",ck:{"11":"si","12":"si","13":"no","21":"no","22":"no","23":"si","31":"no"},ot:"OT26041",oc:"OC-0401-01",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000002",fecha:"2026-03-19",hora:"10:45",cliente:"Minera Escondida",guia:"GD-2026-7841",transp:"LogisCobre",pat_cam:"GHIJ-34",pat_rem:"GHIJ-35",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Cilindro Hidráulico",marca:"KOMATSU",modelo:"CDT3-MI",nparte:"R987-223",nserie:"CIL-22-0042",color:"Amarillo Komatsu",estvis:"Bueno",cemb:"Bueno",acc:"Tapones incluidos",obs_comp:"Sin daños",ck:{"11":"si","12":"no","13":"no","21":"no","22":"no","23":"si","31":"si"},ot:"OT26058",oc:"OC-0405-02",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000006",fecha:"2026-03-25",hora:"13:15",cliente:"Collahuasi",guia:"GD-2026-7499",transp:"Trans Atacama",pat_cam:"WXYZ-22",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Caja de Reducción",marca:"KOMATSU",modelo:"930E-5",nparte:"424-52-21100",nserie:"CR-2026-012",color:"Amarillo Komatsu",estvis:"Bueno",cemb:"Bueno",acc:"Manual técnico incluido",obs_comp:"Sin observaciones",ck:{"11":"si","12":"si","13":"no","21":"no","22":"si","23":"si","31":"no"},ot:"OT26015",oc:"OC-0410-01",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000007",fecha:"2026-03-28",hora:"08:50",cliente:"ENAMI",guia:"GD-2026-7612",transp:"Transportes Rapi",pat_cam:"ABCD-99",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"Componente crítico Planta Ventanas",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Bomba Hidráulica",marca:"CATERPILLAR",modelo:"390F",nparte:"205-1891",nserie:"BH-2026-028",color:"Amarillo CAT",estvis:"Regular",cemb:"Bueno",acc:"Kit de sellos incluido",obs_comp:"Rótula con holgura leve",ck:{"11":"si","12":"no","13":"no","21":"no","22":"no","23":"si","31":"no"},ot:"OT26021",oc:"OC-0412-02",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  // ── Abril 2026 (8 registros) ──────────────────────────────────────────────
+  {codigo:"RC-BOD-2026-000008",fecha:"2026-04-03",hora:"07:40",cliente:"Teck Quebrada Blanca",guia:"GD-2026-8010",transp:"Grúas Tarapacá",pat_cam:"EFGH-44",pat_rem:"EFGH-45",ot_ant:"OT25884",bultos:"1",obs_gral:"Urgente — equipo detenido",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"793F",nparte:"196-7628",nserie:"MF-2026-055",color:"Amarillo CAT",estvis:"Malo",cemb:"Regular",acc:"",obs_comp:"Fuga interna severa, requiere intervención inmediata",ck:{"11":"si","12":"si","13":"si","21":"no","22":"no","23":"si","31":"si"},ot:"OT26031",oc:"OC-0418-01",obs_ot:"Intervención programada turno día",intervenida:true,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000009",fecha:"2026-04-10",hora:"10:20",cliente:"Codelco",guia:"GD-2026-8144",transp:"Trans Andina",pat_cam:"IJKL-77",pat_rem:"",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Motor Eléctrico",marca:"EPIROC",modelo:"MT42",nparte:"3753-1148-01",nserie:"ME-2026-018",color:"Naranja EPIROC",estvis:"Bueno",cemb:"Bueno",acc:"Cables de conexión incluidos",obs_comp:"Sin observaciones",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"si","31":"no"},ot:"OT26038",oc:"OC-0421-03",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000003",fecha:"2026-04-08",hora:"14:10",cliente:"Antucoya",guia:"GD-2026-8201",transp:"",pat_cam:"KLMN-56",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Transmisión",marca:"LIEBHERR",modelo:"6700 OFS",nparte:"29548700",nserie:"TX-2026-009",color:"Gris",estvis:"Malo",cemb:"Regular",acc:"",obs_comp:"Golpe en carcasa lateral",ck:{"11":"si","12":"si","13":"si","21":"no","22":"no","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
+  {codigo:"RC-BOD-2026-000004",fecha:"2026-04-16",hora:"09:05",cliente:"Anglo American",guia:"GD-2026-8841",transp:"Flota Norte",pat_cam:"OPQR-78",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Conjunto Suspensión",marca:"SANDVIK",modelo:"793F",nparte:"427-8532",nserie:"SUSP-26-001",color:"Negro",estvis:"Regular",cemb:"Malo",acc:"Faltan pernos",obs_comp:"Embalaje deteriorado",ck:{"11":"si","12":"no","13":"no","21":"si","22":"no","23":"no","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
+  {codigo:"RC-BOD-2026-000010",fecha:"2026-04-17",hora:"15:30",cliente:"BHP",guia:"GD-2026-8299",transp:"BHP Logistics",pat_cam:"MNOP-11",pat_rem:"MNOP-12",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Transmisión",marca:"LIEBHERR",modelo:"T 264",nparte:"12401234",nserie:"TX-2026-041",color:"Gris",estvis:"Regular",cemb:"Regular",acc:"",obs_comp:"Filtro saturado, requiere evaluación",ck:{"11":"si","12":"si","13":"no","21":"si","22":"no","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
+  {codigo:"RC-BOD-2026-000011",fecha:"2026-04-22",hora:"09:15",cliente:"Minera Escondida",guia:"GD-2026-8401",transp:"LogisCobre",pat_cam:"QRST-55",pat_rem:"QRST-56",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Conjunto Maza",marca:"CATERPILLAR",modelo:"830E-1AC",nparte:"7082-2620",nserie:"MAZA-26-011",color:"Amarillo CAT",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Excelente estado general",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"no","31":"si"},ot:"OT26049",oc:"OC-0432-02",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000012",fecha:"2026-04-28",hora:"11:00",cliente:"Anglo American",guia:"GD-2026-8577",transp:"Flota Norte",pat_cam:"UVWX-33",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Cilindro Hidráulico",marca:"KOMATSU",modelo:"PC8000",nparte:"R875-441",nserie:"CIL-26-019",color:"Amarillo Komatsu",estvis:"Bueno",cemb:"Bueno",acc:"Tapones y sello incluidos",obs_comp:"Sin observaciones",ck:{"11":"si","12":"no","13":"no","21":"no","22":"no","23":"si","31":"si"},ot:"OT26055",oc:"",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000005",fecha:"2026-04-24",hora:"11:30",cliente:"BHP",guia:"GD-2026-9100",transp:"BHP Logistics",pat_cam:"STUV-90",pat_rem:"STUV-91",ot_ant:"",bultos:"3",obs_gral:"",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Conjunto Maza",marca:"CATERPILLAR",modelo:"830E-1AC",nparte:"7085-10710",nserie:"MAZA-26-003",color:"Amarillo CAT",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Excelente estado",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"no","31":"si"},ot:"OT26089",oc:"",obs_ot:"Intervención turno noche",intervenida:true,estado:"OT asignada",historial:[]},
+  // ── Mayo 2026 (8 registros) ───────────────────────────────────────────────
+  {codigo:"RC-BOD-2026-000013",fecha:"2026-05-05",hora:"08:30",cliente:"Antucoya",guia:"GD-2026-8701",transp:"Trans Atacama",pat_cam:"YZAB-66",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Motor Eléctrico",marca:"VOLVO CE",modelo:"A45G",nparte:"17254094",nserie:"ME-2026-033",color:"Gris Volvo",estvis:"Malo",cemb:"Regular",acc:"",obs_comp:"Devanado con signos de sobrecalentamiento",ck:{"11":"si","12":"si","13":"no","21":"si","22":"no","23":"si","31":"no"},ot:"OT26063",oc:"OC-0462-01",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000014",fecha:"2026-05-09",hora:"12:00",cliente:"Collahuasi",guia:"GD-2026-8799",transp:"Trans Atacama",pat_cam:"CDEF-88",pat_rem:"CDEF-89",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"994K",nparte:"3P-0512",nserie:"MF-2026-071",color:"Amarillo CAT",estvis:"Regular",cemb:"Bueno",acc:"",obs_comp:"Desgaste normal en dientes planetario",ck:{"11":"si","12":"si","13":"no","21":"no","22":"no","23":"si","31":"no"},ot:"OT26068",oc:"OC-0465-01",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000015",fecha:"2026-05-13",hora:"09:45",cliente:"Codelco",guia:"GD-2026-8900",transp:"Trans Andina",pat_cam:"GHIJ-10",pat_rem:"",ot_ant:"OT26041",bultos:"1",obs_gral:"Segunda recepción componente equipo 41",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Bomba Hidráulica",marca:"CATERPILLAR",modelo:"797F",nparte:"308-5001",nserie:"BH-2026-044",color:"Amarillo CAT",estvis:"Bueno",cemb:"Bueno",acc:"Kit de sellos",obs_comp:"Sin daños visibles",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"si","31":"no"},ot:"OT26074",oc:"OC-0469-02",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000016",fecha:"2026-05-16",hora:"14:20",cliente:"Teck Quebrada Blanca",guia:"GD-2026-9001",transp:"Grúas Tarapacá",pat_cam:"KLMN-22",pat_rem:"",ot_ant:"",bultos:"2",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Caja de Reducción",marca:"KOMATSU",modelo:"930E-5",nparte:"424-52-21111",nserie:"CR-2026-033",color:"Amarillo Komatsu",estvis:"Regular",cemb:"Regular",acc:"",obs_comp:"Rodamiento exterior con pitting visible",ck:{"11":"si","12":"si","13":"no","21":"no","22":"no","23":"si","31":"si"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
+  {codigo:"RC-BOD-2026-000017",fecha:"2026-05-20",hora:"08:10",cliente:"ENAMI",guia:"GD-2026-9099",transp:"Transportes Rapi",pat_cam:"OPQR-44",pat_rem:"OPQR-45",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Conjunto Suspensión",marca:"SANDVIK",modelo:"TH550",nparte:"332-08-08010",nserie:"SUSP-26-044",color:"Negro",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Sin observaciones",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"no","31":"si"},ot:"OT26082",oc:"OC-0474-01",obs_ot:"",intervenida:false,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000018",fecha:"2026-05-23",hora:"16:00",cliente:"BHP",guia:"GD-2026-9155",transp:"BHP Logistics",pat_cam:"STUV-66",pat_rem:"STUV-67",ot_ant:"OT26001",bultos:"1",obs_gral:"Requiere atención prioritaria",receptor:"Oscar Mac-Nab",cargo:"Supervisor de Desarme",tipo:"Transmisión",marca:"LIEBHERR",modelo:"6700",nparte:"29548711",nserie:"TX-2026-059",color:"Gris",estvis:"Malo",cemb:"Malo",acc:"",obs_comp:"Filtro taponado, contaminación interna severa",ck:{"11":"si","12":"si","13":"si","21":"si","22":"no","23":"si","31":"si"},ot:"OT26091",oc:"OC-0478-03",obs_ot:"Intervención turno noche — componente crítico",intervenida:true,estado:"OT asignada",historial:[]},
+  {codigo:"RC-BOD-2026-000019",fecha:"2026-05-27",hora:"10:10",cliente:"Anglo American",guia:"GD-2026-9220",transp:"Flota Norte",pat_cam:"WXYZ-77",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Marilyn Rojas",cargo:"Analista de Inventario",tipo:"Motor Eléctrico",marca:"EPIROC",modelo:"MT42",nparte:"3753-1148-02",nserie:"ME-2026-047",color:"Naranja EPIROC",estvis:"Regular",cemb:"Bueno",acc:"",obs_comp:"Rodamiento trasero con vibración leve",ck:{"11":"si","12":"no","13":"no","21":"si","22":"no","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
+  {codigo:"RC-BOD-2026-000020",fecha:"2026-05-30",hora:"07:55",cliente:"Minera Escondida",guia:"GD-2026-9311",transp:"LogisCobre",pat_cam:"ABCD-55",pat_rem:"",ot_ant:"",bultos:"1",obs_gral:"",receptor:"Eduardo Godoy",cargo:"Jefe de Bodega",tipo:"Mando Final",marca:"CATERPILLAR",modelo:"994K",nparte:"3P-0291",nserie:"MF-2026-088",color:"Amarillo CAT",estvis:"Bueno",cemb:"Bueno",acc:"Completo",obs_comp:"Buen estado general",ck:{"11":"si","12":"no","13":"no","21":"no","22":"si","23":"si","31":"no"},ot:"",oc:"",obs_ot:"",intervenida:false,estado:"Pendiente OT",historial:[]},
 ];
 let db=[...DEMO.map(r=>({...r,historial:[...r.historial]}))];
 let correlativo=db.length;
@@ -725,15 +788,35 @@ function rolBadge(r){
 function renderDash(){
   const total=db.length,sinOT=db.filter(r=>r.estado==='Pendiente OT').length,conOT=db.filter(r=>r.ot).length;
   const intervenidas=db.filter(r=>r.intervenida).length;
+  const now=new Date();
+  const curKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const prevDate=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const prevKey=`${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
+  const curMonth=db.filter(r=>r.fecha.startsWith(curKey)).length;
+  const prevMonth=db.filter(r=>r.fecha.startsWith(prevKey)).length;
+  const trendDiff=curMonth-prevMonth;
+  const trendHTML=trendDiff>0?`<div class="stat-trend trend-up">↑ ${trendDiff} vs mes anterior</div>`:trendDiff<0?`<div class="stat-trend trend-warn">↓ ${Math.abs(trendDiff)} vs mes anterior</div>`:`<div class="stat-trend trend-neutral">igual que mes anterior</div>`;
+  const eff=total?Math.round(conOT/total*100):0;
   document.getElementById('sg').innerHTML=`
-    <div class="stat-card"><div class="num">${total}</div><div class="lbl">Total recepciones</div><div class="delta" style="color:var(--blue)">↑ ${correlativo} registradas</div></div>
-    <div class="stat-card"><div class="num" style="color:#854D0E">${sinOT}</div><div class="lbl">Pendientes de OT</div></div>
-    <div class="stat-card"><div class="num" style="color:var(--green)">${conOT}</div><div class="lbl">Con OT asignada</div></div>
-    <div class="stat-card"><div class="num" style="color:var(--purple)">${intervenidas}</div><div class="lbl">OT Intervenidas</div></div>`;
+    <div class="stat-card sc-blue">
+      <svg class="stat-icon" width="44" height="44" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div class="num">${total}</div><div class="lbl">Total recepciones</div>${trendHTML}</div>
+    <div class="stat-card sc-amber">
+      <svg class="stat-icon" width="44" height="44" fill="none" stroke="#F59E0B" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="num" style="color:#D97706">${sinOT}</div><div class="lbl">Pendientes de OT</div>
+      <div class="stat-trend trend-warn">${total?Math.round(sinOT/total*100):0}% sin asignar</div></div>
+    <div class="stat-card sc-green">
+      <svg class="stat-icon" width="44" height="44" fill="none" stroke="var(--green)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="num" style="color:var(--green)">${conOT}</div><div class="lbl">Con OT asignada</div>
+      <div class="stat-trend trend-up">${eff}% eficiencia</div></div>
+    <div class="stat-card sc-purple">
+      <svg class="stat-icon" width="44" height="44" fill="none" stroke="var(--purple)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="num" style="color:var(--purple)">${intervenidas}</div><div class="lbl">OT Intervenidas</div>
+      <div class="stat-trend ${intervenidas>0?'trend-warn':'trend-neutral'}">${intervenidas>0?'Requieren seguimiento':'Sin intervenciones activas'}</div></div>`;
   document.getElementById('dash-rec').innerHTML=[...db].reverse().slice(0,5).map(r=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--gray-100)">
       <div><div class="mono">${r.codigo}</div><div style="font-size:11px;color:var(--gray-500);margin-top:2px">${r.cliente} · ${r.tipo} · ${r.marca}</div></div>
-      <div style="display:flex;align-items:center;gap:6px">${badge(r.estado)}${r.intervenida?'<span class="badge b-purple">Intervenida</span>':''}</div></div>`).join('');
+      <div style="display:flex;align-items:center;gap:6px">${badge(r.estado)}${r.intervenida?'<span class="badge b-purple">INT</span>':''}</div></div>`).join('');
   document.getElementById('chart-total').textContent=total;
   drawDonut(conOT,sinOT,total);
   const pO=total?Math.round(conOT/total*100):0,pP=total?Math.round(sinOT/total*100):0;
@@ -741,10 +824,49 @@ function renderDash(){
     <div class="legend-item"><div class="legend-dot" style="background:#15803D"></div><span>${conOT} Con OT (${pO}%)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#854D0E"></div><span>${sinOT} Pendientes (${pP}%)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div><span>${intervenidas} Intervenidas</span></div>`;
-  // OT intervenidas panel
+  // Bar chart: últimos 6 meses
+  const MNAMES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const barLabels=[],barValues=[];
+  for(let i=5;i>=0;i--){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    barLabels.push(MNAMES[d.getMonth()]);
+    barValues.push(db.filter(r=>r.fecha.startsWith(key)).length);
+  }
+  requestAnimationFrame(()=>drawBar('bar-chart',barLabels,barValues));
+  // Top clientes
+  const clienteCount={};
+  db.forEach(r=>{clienteCount[r.cliente]=(clienteCount[r.cliente]||0)+1;});
+  const topClientes=Object.entries(clienteCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxCli=topClientes[0]?.[1]||1;
+  document.getElementById('dash-top-clientes').innerHTML=topClientes.map(([cli,n])=>`
+    <div class="client-row">
+      <div class="client-name">${cli}</div>
+      <div class="client-bar-bg"><div class="client-bar-fill" style="width:${Math.round(n/maxCli*100)}%"></div></div>
+      <div class="client-count">${n}</div>
+    </div>`).join('');
+  // Condición visual (Admin/Supervisor)
+  const isAdminOrSup=currentUser?.perms.admin||currentUser?.rol==='Supervisor';
+  const cardEV=document.getElementById('card-estvis');
+  if(cardEV){
+    cardEV.style.display=isAdminOrSup?'block':'none';
+    if(isAdminOrSup){
+      const evColors={Bueno:'#15803D',Regular:'#D97706',Malo:'#DC2626'};
+      const evCount={Bueno:0,Regular:0,Malo:0};
+      db.forEach(r=>{if(evCount[r.estvis]!==undefined)evCount[r.estvis]++;});
+      document.getElementById('dash-estvis').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        ${Object.entries(evCount).map(([label,n])=>{const pct=total?Math.round(n/total*100):0;return `<div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:600;color:${evColors[label]}">${label}</span>
+            <span style="font-size:12px;color:var(--gray-500)">${n} <span style="color:var(--gray-400)">(${pct}%)</span></span>
+          </div>
+          <div class="vstate-bar-bg"><div class="vstate-bar-fill" style="width:${pct}%;background:${evColors[label]}"></div></div>
+        </div>`;}).join('')}</div>`;
+    }
+  }
+  // OT Intervenidas panel
   const intList=db.filter(r=>r.intervenida);
   const panel=document.getElementById('card-intervenidas');
-  const isAdminOrSup=currentUser?.perms.admin||currentUser?.rol==='Supervisor';
   panel.style.display=isAdminOrSup&&intList.length>0?'block':'none';
   document.getElementById('int-count').textContent=intList.length;
   document.getElementById('int-list').innerHTML=intList.map(r=>`
@@ -764,6 +886,35 @@ function drawDonut(a,b,t){
   let s=-Math.PI/2;
   data.forEach(d=>{const sl=(d.v/t)*Math.PI*2;ctx.beginPath();ctx.moveTo(90,90);ctx.arc(90,90,70,s,s+sl);ctx.closePath();ctx.fillStyle=d.c;ctx.fill();s+=sl;});
   ctx.beginPath();ctx.arc(90,90,52,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+}
+function drawBar(id,labels,values){
+  const canvas=document.getElementById(id);if(!canvas)return;
+  const W=canvas.offsetWidth||canvas.parentElement?.offsetWidth||380;
+  canvas.width=W;
+  const H=canvas.height||130;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const maxV=Math.max(...values,1);
+  const n=labels.length,padL=8,padR=8,padT=24,padB=20;
+  const cellW=(W-padL-padR)/n;
+  const barW=Math.floor(cellW*0.5);
+  ctx.fillStyle='#E5E7EB';ctx.fillRect(padL,H-padB,W-padL-padR,1);
+  values.forEach((v,i)=>{
+    const cx=padL+i*cellW+cellW/2;
+    const bH=v>0?Math.max(4,Math.round((v/maxV)*(H-padT-padB))):0;
+    const x=cx-barW/2,y=H-padB-bH;
+    if(v>0){
+      const r=3;ctx.fillStyle='#2E75B6';
+      ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+barW-r,y);
+      ctx.quadraticCurveTo(x+barW,y,x+barW,y+r);
+      ctx.lineTo(x+barW,y+bH);ctx.lineTo(x,y+bH);ctx.lineTo(x,y+r);
+      ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#1F3864';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';
+      ctx.fillText(v,cx,y-5);
+    }
+    ctx.fillStyle='#9CA3AF';ctx.font='10px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(labels[i],cx,H-4);
+  });
 }
 
 // ── TABLAS ─────────────────────────────────────────────────────────────────
