@@ -160,6 +160,17 @@ tbody tr:hover td{background:#F9FAFB}
 .field input,.field select,.field textarea{padding:9px 12px;border:1.5px solid var(--gray-300);border-radius:var(--r);font-size:13px;font-family:var(--font);color:var(--gray-900);background:var(--white);transition:all .15s}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1)}
 .field input[readonly]{background:var(--gray-100);color:var(--gray-600)}
+/* Combobox buscable (lista maestra de clientes) */
+.combo{position:relative}
+.combo>input{width:100%;box-sizing:border-box}
+.combo-list{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:60;background:var(--white);border:1.5px solid var(--gray-300);border-radius:var(--r);box-shadow:0 10px 28px rgba(31,56,100,.16);max-height:260px;overflow-y:auto;display:none;-webkit-overflow-scrolling:touch}
+.combo-list.open{display:block}
+.combo-opt{padding:10px 12px;font-size:13px;color:var(--gray-900);cursor:pointer;border-bottom:1px solid var(--gray-100);line-height:1.3}
+.combo-opt:last-child{border-bottom:none}
+.combo-opt:hover,.combo-opt.active{background:var(--navy-light)}
+.combo-opt mark{background:#FEF3C7;color:inherit;border-radius:2px;padding:0 1px}
+.combo-empty{padding:11px 12px;font-size:12px;color:var(--gray-500)}
+.combo-count{padding:7px 12px;font-size:11px;color:var(--gray-500);background:var(--gray-100);border-bottom:1px solid var(--gray-200);position:sticky;top:0}
 .field textarea{min-height:72px;resize:vertical}
 .field-error{font-size:11px;color:var(--red);margin-top:3px;display:none}
 .field-error.show{display:block}
@@ -483,7 +494,7 @@ body.drawer-open{overflow:hidden}
   <div class="sbar"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--gray-400);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" placeholder="Buscar código, cliente, componente, marca, serie..." id="srch" oninput="filtrar()"></div>
   <div class="frow" id="frow"></div>
   <div class="table-wrap">
-    <table><thead><tr><th></th><th>Código</th><th>Fecha</th><th>Cliente</th><th>Componente</th><th>Marca</th><th>Color</th><th>N° Serie</th><th>Guía</th><th>OT</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <table><thead><tr><th></th><th>Código</th><th>Fecha</th><th>Cliente</th><th>Componente</th><th>Marca</th><th>Color</th><th>Color base</th><th>N° Serie</th><th>Guía</th><th>OT</th><th>Estado</th><th>Acciones</th></tr></thead>
     <tbody id="tbody-rec"></tbody></table>
   </div>
 </div>
@@ -497,7 +508,13 @@ body.drawer-open{overflow:hidden}
       <div class="field"><label>Fecha<span class="req">★</span></label><input type="date" id="f-fecha" readonly></div>
       <div class="field"><label>Hora</label><input type="time" id="f-hora" readonly></div>
       <div class="field"><label>Recibido por<span class="req">★</span></label><input type="text" id="f-receptor" readonly></div>
-      <div class="field"><label>Cliente<span class="req">★</span></label><select id="f-cliente"><option value="">Seleccionar...</option><option>Komatsu KMC</option><option>BHP</option><option>Komatsu Chile</option><option>Alto Norte</option><option>Manto de Oro</option><option>Lomas Bayas</option><option>Mantos Blancos</option><option>Manto Verde</option><option>Sierra Gorda</option><option>SQM Nitratos</option></select></div>
+      <div class="field"><label>Cliente<span class="req">★</span></label>
+        <div class="combo" id="combo-cliente">
+          <input type="hidden" id="f-cliente">
+          <input type="text" id="f-cliente-search" autocomplete="off" placeholder="Buscar y seleccionar cliente..." oninput="filtrarClientes()" onfocus="abrirClientes()" onkeydown="navClientes(event)" onblur="cerrarClientesDiferido()">
+          <div class="combo-list" id="combo-cliente-list"></div>
+        </div>
+      </div>
       <div class="field"><label>N° Guía de despacho<span class="req">★</span></label><input type="text" id="f-guia" placeholder="GD-2026-XXXX"></div>
       <div class="field"><label>Transportista</label><input type="text" id="f-transp"></div>
       <div class="field"><label>Patente camión</label><input type="text" id="f-pat-cam"></div>
@@ -521,6 +538,7 @@ body.drawer-open{overflow:hidden}
       <div class="field"><label>N° Parte</label><input type="text" id="f-nparte"></div>
       <div class="field"><label>N° Serie</label><input type="text" id="f-nserie"></div>
       <div class="field"><label>Color del componente<span class="req">★</span></label><select id="f-color"><option value="">Seleccionar...</option><option>Amarillo CAT</option><option>Amarillo Komatsu</option><option>Blanco</option><option>Negro</option><option>Verde</option><option>Rojo</option><option>Naranja</option><option>Gris</option><option>Otro</option></select></div>
+      <div class="field"><label>Color de base de traslado<span class="req">★</span></label><select id="f-color-base"><option value="">Seleccionar...</option><option>Negro</option><option>Amarillo CAT</option><option>Amarillo Komatsu</option><option>Blanco</option><option>Verde</option><option>Rojo</option><option>Naranja</option><option>Gris</option><option>Azul</option><option>Otro</option></select></div>
       <div class="field"><label>Estado visual<span class="req">★</span></label><select id="f-estvis"><option value="">Seleccionar...</option><option>Bueno</option><option>Regular</option><option>Malo</option><option>Requiere inspección</option></select></div>
       <div class="field"><label>Condición embalaje<span class="req">★</span></label><select id="f-cemb"><option value="">Seleccionar...</option><option>Bueno</option><option>Regular</option><option>Malo</option><option>Sin embalaje</option></select></div>
       <div class="field ff"><label>Accesorios recibidos</label><input type="text" id="f-acc"></div>
@@ -647,6 +665,7 @@ body.drawer-open{overflow:hidden}
     <div class="field"><label>N° Parte</label><input type="text" id="e-nparte"></div>
     <div class="field"><label>N° Serie</label><input type="text" id="e-nserie"></div>
     <div class="field"><label>Color</label><select id="e-color"><option>Amarillo CAT</option><option>Amarillo Komatsu</option><option>Blanco</option><option>Negro</option><option>Verde</option><option>Rojo</option><option>Naranja</option><option>Gris</option><option>Otro</option></select></div>
+    <div class="field"><label>Color base de traslado</label><select id="e-color_base"><option>Negro</option><option>Amarillo CAT</option><option>Amarillo Komatsu</option><option>Blanco</option><option>Verde</option><option>Rojo</option><option>Naranja</option><option>Gris</option><option>Azul</option><option>Otro</option></select></div>
     <div class="field"><label>Estado visual</label><select id="e-estvis"><option>Bueno</option><option>Regular</option><option>Malo</option><option>Requiere inspección</option></select></div>
     <div class="field"><label>Condición embalaje</label><select id="e-cemb"><option>Bueno</option><option>Regular</option><option>Malo</option><option>Sin embalaje</option></select></div>
     <div class="field ff"><label>Observaciones componente</label><textarea id="e-obs-comp"></textarea></div>
@@ -721,7 +740,6 @@ function toggleDrawer(){
 // ── USUARIOS ───────────────────────────────────────────────────────────────
 let users = [
   {nombre:'Kurt Cortes',        user:'Admin',      pass:'admin1234',    cargo:'Supervisor de Soporte Técnico',    area:'IDAC',                          rol:'Admin',      perms:{crear:true, editar:true, ot:true, admin:true, intervenir:true}},
-  {nombre:'Marilyn Rojas',      user:'mrojas',     pass:'marilyn1234',  cargo:'Analista de Inventario',           area:'Bodega',                        rol:'Operador',   perms:{crear:true, editar:false,ot:false,admin:false,intervenir:false}},
   {nombre:'Eduardo Godoy',      user:'egodoy',     pass:'eduardo1234',  cargo:'Jefe de Bodega',                   area:'Bodega / Jefatura',              rol:'Supervisor', perms:{crear:true, editar:true, ot:true, admin:false,intervenir:true}},
   {nombre:'Camila Herrera',     user:'cherrera',   pass:'camila1234',   cargo:'Encargada de Gestión Comercial',   area:'Gestión Comercial / Jefatura',   rol:'Supervisor', perms:{crear:false,editar:false,ot:true, admin:false,intervenir:true}},
   {nombre:'Isis Gopfert',       user:'igopfert',   pass:'isis1234',     cargo:'Asistente Técnico Comercial',      area:'Gestión Comercial',              rol:'Operador',   perms:{crear:false,editar:false,ot:true, admin:false,intervenir:false}},
@@ -755,7 +773,7 @@ let ckState={},photoFiles={},photoState={},currentSlot=null,modalCod=null,filtro
 
 const PNAMES=['Datos generales','Componente','Fotografías','Confirmar'];
 const SLOTS=[
-  {key:'recepcion',label:'1. Recepción',req:true},
+  {key:'foto_general',label:'1. Foto General',req:true},
   {key:'anclaje_vastago',label:'2. Anclaje Vástago',req:true},
   {key:'anclaje_botella',label:'3. Anclaje Botella',req:true},
   {key:'alimentaciones',label:'4. Alimentaciones',req:true},
@@ -764,6 +782,109 @@ const SLOTS=[
   {key:'id_cliente',label:'7. Identificación del cliente',req:true},
   {key:'danos_visibles',label:'8. Daños visibles (opcional)',req:false},
 ];
+// ── LISTA MAESTRA DE CLIENTES ──────────────────────────────────────────────
+// Sin duplicados (Set) y ordenada alfabéticamente (locale es). Fuente: archivo maestro.
+const CLIENTES=[...new Set([
+  'AMECO CHILE S.A.','ANGLO AMERICAN NORTE','ANGLO AMERICAN SUR S.A.','ANTOFAGASTA TERMINAL INTERNACIONAL S.A.',
+  'ARIDOS ARACENA LOPEZ LTDA.','ASERCOP S.A.','AVALOS Y CIA LTDA.','BECHTEL CHILE LIMITADA','BESALCO MAQUINARIAS',
+  'BRANDA SERVICIOS LTDA.','CARLOS CARVAJAL','CENTRO DE REPARACION DE COMPONENTES LIMITADA',
+  'CHRISTENSEN CHILE S A - DIVISION UHCO','CIA. MINERA FORTUNA LTDA.','COMERCIAL TRIX S.A','COMERCIALIZADORA M&M SPA',
+  'COMERCIALIZADORA e IMPORTADORA R&R SPA','COMPAÑIA CONTRACTUAL MINERA CANDELARIA','COMPAÑIA MINERA CERRO COLORADO LTDA.',
+  'COMPAÑIA MINERA DEL PACIFICO S.A','COMPAÑIA MINERA DOÑA INES DE COLLAHUASI','COMPAÑIA MINERA LOMAS BAYAS',
+  'COMPAÑIA MINERA TECK CARMEN DE ANDACOLLLO','COMPAÑIA MINERA ZALDIVAR LTDA','COMPAÑIA MINERA ZALDIVAR S.A.',
+  'COMPAÑIA MINERA MANTOS DE ORO','COMPAÑIA MINERA TECK QUEBRADA BLANCA S.A.','COMPAÑIA PORTUARIA MEJILLONES S.A.',
+  'COMPLEJO METALURGICO ALTONORTE S.A.','CONSORCIO HIDROCROM - MFD SISTEMAS HIDRAULICOS LTDA.','CONSORCIO VIC-WAL LTDA.',
+  'CONSTRUCCIONES Y PAVIMENTOS LTDA','CONSTRUCTORA E INMOBILIARIA PEREZ Y FLORES LTDA.','CONSTRUCTORA EL SAUCE S.A.',
+  'CONSTRUCTORA LOS CASTAÑOS LTDA.','CRISTHIAN FERRADA ROCO','DISTRIBUIDORA DIVALCO S.A.',
+  'ECHEVERRIA IZQUIERDO MONTAJES INDUSTRIALES S.A.','EMIN INGENIERIA Y CONSTRUCCION S.A',
+  'EMPRESA DE MANTENCIONES Y SERVICIOS SALFA S.A.','ENDURO SPA','EPIROC CHILE S.A.C.','EQUIPOS MINEROS RIO GRANDE LTDA.',
+  'EQUIPOS Y SERVICIOS AURA LTDA.','EQUIPOS Y SERVICIOS TREX LTDA.','EQUIPOS Y SERVICIOS TREX SPA',
+  'ESTABOY TRANSPORTES EXPRESS LTDA','FINNING CHILE S.A','FLEX STORE LTDA.','FLSmidth S.A.','FORJADOS S.A.','FULL TORQUE',
+  'GEOTEC BOYLES BROS S.A.','GRUVAL SPA','GUACOLDA ENERGIA S A','GUERRAP S.A.','GUILLERMO BACHO CAMPANA',
+  'HE PARTS INTERNATIONAL CHILE SPA','HERCO EQUIPMENTS SPA','HIAB CHILE S A','HIDRAULICA CALAMA SPA.','HIDRAULICA JC',
+  'HIDRAULICA NORTE GRANDE SPA','HIDRAULICA PATAGONIA S.A.','HIDROMEC SPA.','HIDROMETALICA DEL NORTE SPA',
+  'HIDROMFD COPIAPO S.A.','HIDROMFD NORTE SPA','HIDRÁULICA PATAGONIA CHILE SPA','HOFMANN ENGINEERING SUDAMERICA LIMITADA',
+  'Hidraulica Antofagasta CP','INGENIERIA CIVIL VICENTE S.A','INGENIERIA Y MAQUINARIA TAMBO LTDA',
+  'INSSESA, INGENIERIA Y SERVICIOS S.A','INVERSIONES FARIAS','INVERSIONES KALLPA SPA','INVERSIONES RIO CALLE CALLE LTDA',
+  'IQ SERVICIOS GENERALES SPA','IQUIQUE TERMINAL INTERNACIONAL S A','ISENOR INGENIERIA SERVICIOS Y PROYECTOS LTDA.',
+  'ISLUGA S A','IVAN ARAYA','JORGE GALARCE PIMIENTA','JOSE ENRIQUE AVALOS MORA','JOY GLOBAL (CHILE) S.A.',
+  'JUAN CARLOS COROCEO','JUAN CARLOS COROCEO Y COMPAÑIA LTDA.','KOMATSU CHILE S.A.','KOMATSU CUMMINS CHILE ARRIENDA S.A.',
+  'KOMATSU REMAN CENTER CHILE S A','LEVER MECANICA Y SERVICIOS LTDA.','LIEBHERR CHILE S.A.','MAESTRANZA DIESEL S.A.',
+  'MAESTRANZA FAREMIN LTDA.','MAESTRANZA PELLERANO','MAJOR DRILLING CHILE S A','MANTOS COPPER S.A.','MANTOVERDE S.A.',
+  'MANUFACTURAS INDUSTRIALES E.I.R.L','MAQUINARIA Y CONSTRUCCIÓN RIO LOA S.A.','MAQUINARIAS Y CONSTRUCCIONES RIO LOA S A',
+  'MARIA FRANCESCA ZENTENO PARRA','MARIO CAMPUSANO ALCAYAGA EIRL','MARTIN FREDES DAVILA',
+  'MAS ERRAZURIZ MAQUINARIAS Y SERVICIOS LIMITADA','MASTER DRILLING CHILE S.A.','MECAMIN LTDA.',
+  'MECANICA E HIDRAULICA DE PRECISION LTDA.','MECAPRES LTDA.','METALMECANICA TORMETAL','METALURGIA Y PRODUCTOS TECNICOS LTDA.',
+  'MFD COQUIMBO SPA','MINA INVIERNO S.A','MINERA ANTUCOYA','MINERA CENTINELA','MINERA ESCONDIDA LTDA.',
+  'MINERA MERIDIAN LIMITADA','MINERA MICHILLA SPA','MINERA SPENCE S.A','MINETEC S A','MOVIMIENTO DE TIERRA Y CONSTRUCCION S A',
+  'Maestranza Varas Ltda','PATRICIO ARAYA ARAYA','PATRICIO TOLEDO ASTORGA','PELLERANO HMNOS LTDA.','PERFONOR SPA','PESSA S.A.',
+  'POWER TRAIN TECHNOLOGIES S.A.','PRODUCCION Y SERVICIOS MINEROS LTDA.','PROYECTA INGENIERIA Y CONSTRUCCCION LTDA.',
+  'REMISOL SERVICIOS E INGENIERIA SPA','RICARDO NICANOR MOLGAS CORTES','SAAM S.A.','SANDIMAN S.A.','SANDVIK CHILE S.A.',
+  'SCANCONTROLS INGENIERIA LIMITADA','SCM MINERA LUMINA COPPER CHILE','SERVICIOS DE INGENIERIA MECANICA XAR',
+  'SERVICIOS HIDRAULICOS JN SPA','SERVICIOS INTEGRALES HIDRAULICA Y METALMECANICA LIMITADA','SERVICIOS Y ASESORIAS ABC SPA',
+  'SIERRA GORDA SCM','SIMIN LIMITADA','SIMMA S.A.','SIN CLIENTE PROVEEDOR','SM CYLINDER','SOCIEDAD ACL MAQUINARIAS LIMITADA',
+  'SOCIEDAD ASESORIAS Y VENTAS TECNICAS LTDA.','SOCIEDAD COMERCIAL ABQ LTDA.','SOCIEDAD COMERCIAL ANTOFAGASTA PART LIMITADA',
+  'SOCIEDAD COMERCIAL HIDROPEX LTDA.','SOCIEDAD COMERCIAL INGENIERÍA Y SERVICIOS M&S LTDA','SOCIEDAD COMERCIAL SAN IGNACIO LTDA',
+  'SOCIEDAD CONTRACTUAL MINERA BERTA','SOCIEDAD CONTRACTUAL MINERA CAROLA','SOCIEDAD CONTRACTUAL MINERA EL ABRA',
+  'SOCIEDAD CONTRACTUAL MINERA FRANKE','SOCIEDAD CONTRACTUAL MINERA HMC GOLD',
+  'SOCIEDAD DE SERVICIOS ELÉCTRICOS Y ELECTROMECÁNICOS ELECTROMINING LIMITADA','SOCIEDAD DIESEL OMT LIMITADA',
+  'SOCIEDAD MINERA TRES PUNTAS','SOCIEDAD RIVERA Y COMPAÑIA LTDA.','SOCIEDAD SIMEC SERVICIOS INTEGRALES LTDA',
+  'SQM NITRATOS S A','STEM SPA','SWANSON CHILE S A','TALLERES LUCAS NORTE S.A.','TASK FORCE CHILE LIMITADA',
+  'TECNOLOGIA EN TRANSMISION DE POTENCIA MECANICA S.A.','TERESA LAGOS GAMONAL','TERMINAL PUERTO ARICA S A','THIESS CHILE SPA',
+  'THYSSENKRUPP INDUSTRIAL SOLUTIONS CHILE LTDA.','TODO ACERO MONTAJE INDUSTRIAL','TRANSPORTES ASTUDILLO',
+  'TRANSPORTES SAVER LTDA.','VALENTINA CONSTANZA LASTRA ROJAS','VDE LTDA.','VECCHIOLA INGENIERIA Y CONSTRUCCION S A',
+  'VECCHIOLA S.A.','ZAMINE SERVICE CHILE SPA','ZUBLIN INTERNATIONAL GMBH CHILE SPA'
+])].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+
+// ── COMBOBOX BUSCABLE DE CLIENTES ──────────────────────────────────────────
+let _cliActivo=-1; // índice resaltado por teclado dentro de la lista filtrada
+function _escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function _clientesFiltrados(){
+  const q=(document.getElementById('f-cliente-search').value||'').trim().toLowerCase();
+  return q?CLIENTES.filter(c=>c.toLowerCase().includes(q)):CLIENTES.slice();
+}
+function renderClienteOpts(){
+  const box=document.getElementById('combo-cliente-list');
+  const q=(document.getElementById('f-cliente-search').value||'').trim();
+  const ql=q.toLowerCase();
+  const list=_clientesFiltrados();
+  if(list.length===0){box.innerHTML=`<div class="combo-empty">Sin coincidencias para «${_escHtml(q)}»</div>`;return;}
+  const head=`<div class="combo-count">${list.length} cliente(s)</div>`;
+  box.innerHTML=head+list.map((c,i)=>{
+    let label=_escHtml(c);
+    if(ql){const idx=c.toLowerCase().indexOf(ql);if(idx>=0)label=_escHtml(c.slice(0,idx))+'<mark>'+_escHtml(c.slice(idx,idx+q.length))+'</mark>'+_escHtml(c.slice(idx+q.length));}
+    const gi=CLIENTES.indexOf(c);
+    return `<div class="combo-opt${i===_cliActivo?' active':''}" data-i="${i}" onmousedown="event.preventDefault();seleccionarCliente(${gi})">${label}</div>`;
+  }).join('');
+}
+function abrirClientes(){_cliActivo=-1;renderClienteOpts();document.getElementById('combo-cliente-list').classList.add('open');}
+function cerrarClientes(){document.getElementById('combo-cliente-list').classList.remove('open');}
+function cerrarClientesDiferido(){setTimeout(()=>{cerrarClientes();
+  // Si no hay cliente confirmado, descarta lo tecleado (evita clientes manuales/duplicados)
+  const v=document.getElementById('f-cliente').value;
+  document.getElementById('f-cliente-search').value=v;
+},150);}
+function filtrarClientes(){
+  document.getElementById('f-cliente').value=''; // hasta que se elija una opción válida
+  _cliActivo=-1;renderClienteOpts();document.getElementById('combo-cliente-list').classList.add('open');
+}
+function seleccionarCliente(globalIdx){
+  const c=CLIENTES[globalIdx];if(c==null)return;
+  document.getElementById('f-cliente').value=c;
+  document.getElementById('f-cliente-search').value=c;
+  cerrarClientes();
+}
+function navClientes(e){
+  const box=document.getElementById('combo-cliente-list');
+  if(!box.classList.contains('open')){if(e.key==='ArrowDown')abrirClientes();return;}
+  const list=_clientesFiltrados();
+  if(e.key==='ArrowDown'){e.preventDefault();_cliActivo=Math.min(_cliActivo+1,list.length-1);renderClienteOpts();_scrollCliActivo();}
+  else if(e.key==='ArrowUp'){e.preventDefault();_cliActivo=Math.max(_cliActivo-1,0);renderClienteOpts();_scrollCliActivo();}
+  else if(e.key==='Enter'){if(_cliActivo>=0&&list[_cliActivo]){e.preventDefault();seleccionarCliente(CLIENTES.indexOf(list[_cliActivo]));}}
+  else if(e.key==='Escape'){cerrarClientes();}
+}
+function _scrollCliActivo(){const el=document.querySelector('#combo-cliente-list .combo-opt.active');if(el)el.scrollIntoView({block:'nearest'});}
+
 const PM={dashboard:'Dashboard',recepciones:'Recepciones',nueva:'Nueva recepción',ot:'Asignar OT',informes:'Informes FSGI-249',usuarios:'Gestión de Usuarios',auditoria:'Auditoría del Sistema'};
 const BREADCRUMB={recepciones:'Bodega',nueva:'Bodega',ot:'Gestión Comercial',informes:'Gestión Comercial',usuarios:'Administración',auditoria:'Administración'};
 
@@ -979,7 +1100,7 @@ function setF(e){filtroActivo=e;renderRec();}
 function filtrar(){renderFiltered();}
 function renderFiltered(){
   const q=(document.getElementById('srch')?.value||'').toLowerCase();
-  const rows=db.filter(r=>{const mq=!q||[r.codigo,r.cliente,r.tipo,r.guia,r.nserie,r.marca,r.color,r.receptor].some(f=>f?.toLowerCase().includes(q));return mq&&(filtroActivo==='Todos'||r.estado===filtroActivo);});
+  const rows=db.filter(r=>{const mq=!q||[r.codigo,r.cliente,r.tipo,r.guia,r.nserie,r.marca,r.color,r.color_base,r.receptor].some(f=>f?.toLowerCase().includes(q));return mq&&(filtroActivo==='Todos'||r.estado===filtroActivo);});
   const puedOT=currentUser?.perms.ot;
   const puedEdit=currentUser?.perms.editar||currentUser?.perms.admin;
   document.getElementById('tbody-rec').innerHTML=[...rows].sort((a,b)=>b.codigo.localeCompare(a.codigo)).map(r=>`
@@ -991,6 +1112,7 @@ function renderFiltered(){
       <td>${r.tipo}</td>
       <td><span class="badge b-gray">${r.marca}</span></td>
       <td style="font-size:12px;color:var(--gray-600)">${r.color||'—'}</td>
+      <td style="font-size:12px;color:var(--gray-600)">${r.color_base||'—'}</td>
       <td><span style="font-family:var(--mono);font-size:11px;color:var(--gray-500)">${r.nserie||'—'}</span></td>
       <td style="font-size:12px;color:var(--gray-500)">${r.guia}</td>
       <td>${r.ot?`<span class="mono" style="font-size:12px;color:var(--green)">${r.ot}</span>`:'<span style="color:var(--gray-400)">—</span>'}</td>
@@ -1032,7 +1154,7 @@ function verDetalle(cod){
     ['Código',r.codigo],['Fecha / Hora',`${r.fecha} ${r.hora}`],['Cliente',r.cliente],
     ['Tipo',r.tipo],['Marca',r.marca],['Modelo',r.modelo||'—'],
     ['N° Parte',r.nparte||'—'],['N° Serie',r.nserie||'—'],
-    ['Color',r.color||'—'],['Estado visual',r.estvis],['Condición embalaje',r.cemb],
+    ['Color',r.color||'—'],['Color base de traslado',r.color_base||'—'],['Estado visual',r.estvis],['Condición embalaje',r.cemb],
     ['Accesorios',r.acc||'—'],['Guía despacho',r.guia],
     ['Transportista',r.transp||'—'],['OT asignada',r.ot||'Pendiente'],
     ['Recibido por',r.receptor],['Cargo',r.cargo||'—'],
@@ -1058,7 +1180,7 @@ function editarDesdeDetalle(){
   const r=db.find(x=>x.codigo===detalleEditCod);if(!r)return;
   closeModal('modal-detalle');
   document.getElementById('edit-cod').value=r.codigo;
-  ['tipo','marca','modelo','nparte','nserie','color','estvis','cemb'].forEach(f=>{
+  ['tipo','marca','modelo','nparte','nserie','color','color_base','estvis','cemb'].forEach(f=>{
     const el=document.getElementById(`e-${f}`);if(el){if(el.tagName==='SELECT'){for(let o of el.options)if(o.value===r[f])o.selected=true;}else el.value=r[f]||'';}
   });
   document.getElementById('e-obs-comp').value=r.obs_comp||'';
@@ -1068,7 +1190,7 @@ function editarDesdeDetalle(){
 function guardarEdicion(){
   const cod=document.getElementById('edit-cod').value;
   const r=db.find(x=>x.codigo===cod);if(!r)return;
-  const campos=['tipo','marca','modelo','nparte','nserie','color','estvis','cemb'];
+  const campos=['tipo','marca','modelo','nparte','nserie','color','color_base','estvis','cemb'];
   const cambios=[];
   campos.forEach(f=>{
     const el=document.getElementById(`e-${f}`);
@@ -1223,7 +1345,8 @@ function initWizard(){
   document.getElementById('f-fecha').value=now.toISOString().split('T')[0];
   document.getElementById('f-hora').value=now.toTimeString().slice(0,5);
   document.getElementById('f-receptor').value=currentUser?.nombre||'';
-  ['f-cliente','f-tipo','f-marca','f-color','f-estvis','f-cemb'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
+  document.getElementById('f-cliente').value='';document.getElementById('f-cliente-search').value='';cerrarClientes();
+  ['f-tipo','f-marca','f-color','f-color-base','f-estvis','f-cemb'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
   ['f-guia','f-transp','f-pat-cam','f-pat-rem','f-ot-ant','f-obs-gral','f-modelo','f-nparte','f-nserie','f-acc','f-obs-comp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('f-bultos').value=1;
   ['11','12','13','21','22','23','31'].forEach(k=>{
@@ -1247,7 +1370,7 @@ function renderSteps(){
 function showPaso(n){paso=n;for(let i=1;i<=4;i++)document.getElementById(`p${i}`).style.display=i===n?'block':'none';renderSteps();}
 function goP2(){if(!document.getElementById('f-cliente').value||!document.getElementById('f-guia').value.trim()){toast('Complete los campos obligatorios ★','error');return;}showPaso(2);}
 function goP3(){
-  const req=['f-tipo','f-marca','f-color','f-estvis','f-cemb'];
+  const req=['f-tipo','f-marca','f-color','f-color-base','f-estvis','f-cemb'];
   if(req.some(id=>!document.getElementById(id).value)){toast('Complete todos los campos obligatorios ★','error');return;}
   showPaso(3);updateFotos();
 }
@@ -1270,9 +1393,17 @@ function clickSlot(key){currentSlot=key;document.getElementById('finput').click(
 function handlePhoto(e){
   if(!e.target.files||!e.target.files[0])return;
   const file=e.target.files[0];
-  photoFiles[currentSlot]=file;
+  const slot=currentSlot;
+  const yaCargada=!!photoState[slot];
+  photoFiles[slot]=file;
   const reader=new FileReader();
-  reader.onload=ev=>{photoState[currentSlot]=ev.target.result;e.target.value='';renderPhotoGrid();updateFotos();};
+  reader.onload=ev=>{
+    photoState[slot]=ev.target.result;e.target.value='';renderPhotoGrid();updateFotos();
+    if(slot==='foto_general'){
+      const cod=document.getElementById('cod-gen').textContent;
+      logAction(yaCargada?'Actualización Foto General':'Carga Foto General',`Recepción ${cod}`);
+    }
+  };
   reader.readAsDataURL(file);
 }
 function updateFotos(){
@@ -1293,6 +1424,7 @@ function renderResumen(){
     ['Cliente',g('f-cliente')],['Guía',g('f-guia')],
     ['Código',`<span class="pill">${document.getElementById('cod-gen').textContent}</span>`],
     ['Tipo',g('f-tipo')],['Marca',g('f-marca')],['Color',g('f-color')],
+    ['Color base',g('f-color-base')],
     ['N° Serie',g('f-nserie')||'—'],['Estado',g('f-estvis')],
     ['Receptor',currentUser?.nombre||'—'],['Fotografías',`${SLOTS.filter(s=>photoState[s.key]).length}/${SLOTS.length} ✓`],
   ];
@@ -1303,6 +1435,7 @@ async function finalizar(){
   const btn=document.getElementById('btn-finalizar');
   const gen=document.getElementById('gen-status');
   const msg=document.getElementById('gen-msg');
+  if(!photoFiles['foto_general']){toast('Debe cargar la Foto General antes de finalizar la recepción','error');return;}
   btn.disabled=true;gen.classList.add('show');
   correlativo++;
   const g=id=>document.getElementById(id)?.value||'';
@@ -1314,7 +1447,7 @@ async function finalizar(){
     ot_ant:g('f-ot-ant'),bultos:g('f-bultos'),obs_gral:g('f-obs-gral'),
     receptor:currentUser?.nombre||'',cargo:currentUser?.cargo||'',
     tipo:g('f-tipo'),marca:g('f-marca'),modelo:g('f-modelo'),
-    nparte:g('f-nparte'),nserie:g('f-nserie'),color:g('f-color'),
+    nparte:g('f-nparte'),nserie:g('f-nserie'),color:g('f-color'),color_base:g('f-color-base'),
     estvis:g('f-estvis'),cemb:g('f-cemb'),acc:g('f-acc'),obs_comp:g('f-obs-comp'),
     ck:{...ckState},ot:'',oc:'',obs_ot:'',intervenida:false,estado:'Pendiente OT',historial:[]
   };
